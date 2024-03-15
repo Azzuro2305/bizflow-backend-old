@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;databaseName=FINAL_DB;encrypt=true;trustServerCertificate=true;
+    username: sa
+    password: dockerStrongPwd123
+    hikari:
+      maximum-pool-size: 100
+      connection-timeout: 30000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        format_sql: true
