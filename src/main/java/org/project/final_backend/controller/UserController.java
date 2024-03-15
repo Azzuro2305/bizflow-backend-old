@@ -1,9 +1,7 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
-import org.project.final_backend.domain.HttpResponse;
-import org.project.final_backend.domain.NewUserRequest;
-import org.project.final_backend.domain.NewUserResponse;
+import org.project.final_backend.domain.*;
 import org.project.final_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +20,10 @@ public class UserController {
         HttpResponse<NewUserResponse> response =
                 new HttpResponse<>(userService.registerUser(request), "Successfully registered", HttpStatus.CREATED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<UserInfo> validateUser(@RequestBody ValidateUserRequest request){
+        return ResponseEntity.ok(userService.validateUser(request));
     }
 }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.NewUserRequest;
 import org.project.final_backend.domain.NewUserResponse;
+import org.project.final_backend.domain.UserInfo;
+import org.project.final_backend.domain.ValidateUserRequest;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.UserService;
@@ -20,6 +22,18 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public UserInfo validateUser(ValidateUserRequest request) {
+        final Users user = userRepo
+                .findUsersByMail(request.getMail())
+                .orElseThrow(() -> new RuntimeException("User have not registered yet!"));
+        if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password!");
+        }
+        return modelMapper.map(user, UserInfo.class);
+    }
+
     @Override
     public NewUserResponse registerUser(NewUserRequest request) {
         Users user = Users.builder()
@@ -35,3 +49,20 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(userRepo.save(user), NewUserResponse.class);
     }
 }
+
+
+
+
+
+//@Override
+//public ValidateUserResponse validateUser(ValidateUserRequest request) {
+//    final Users user = userRepo
+//            .findUsersByMail(request.getMail())
+//            .orElseThrow(() -> new RuntimeException("User have not registered yet!"));
+//
+//    if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+//        throw new RuntimeException("Invalid password!");
+//    }
+//
+//    return modelMapper.map(user, ValidateUserResponse.class);
+//}
