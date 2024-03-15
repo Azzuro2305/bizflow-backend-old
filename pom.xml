@@ -8,7 +8,7 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.project</groupId>
+	<groupId>org.project</groupId>
 	<artifactId>final_backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>final_backend</name>
