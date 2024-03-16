@@ -7,6 +7,9 @@ import org.project.final_backend.domain.NewUserResponse;
 import org.project.final_backend.domain.UserInfo;
 import org.project.final_backend.domain.ValidateUserRequest;
 import org.project.final_backend.entity.Users;
+import org.project.final_backend.exception.InvalidPasswordException;
+import org.project.final_backend.exception.UserFoundException;
+import org.project.final_backend.exception.UserNotFoundException;
 import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,31 +30,48 @@ public class UserServiceImpl implements UserService {
     public UserInfo validateUser(ValidateUserRequest request) {
         final Users user = userRepo
                 .findUsersByMail(request.getMail())
-                .orElseThrow(() -> new RuntimeException("User have not registered yet!"));
+                .orElseThrow(() -> new UserNotFoundException("User have not registered yet!"));
         if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password!");
+            throw new InvalidPasswordException("Invalid password!");
         }
         return modelMapper.map(user, UserInfo.class);
     }
 
     @Override
     public NewUserResponse registerUser(NewUserRequest request) {
-        Users user = Users.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .userName(request.getUserName())
-                .mail(request.getMail())
-                .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                .createdDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now())
-                .role(1)
-                .build();
-        return modelMapper.map(userRepo.save(user), NewUserResponse.class);
+        if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
+            throw new UserFoundException("User already exists!");
+        } else {
+            Users user = Users.builder()
+                    .firstName(request.getFirstName())
+                    .lastName(request.getLastName())
+                    .userName(request.getUserName())
+                    .mail(request.getMail())
+                    .password(bCryptPasswordEncoder.encode(request.getPassword()))
+                    .createdDate(LocalDateTime.now())
+                    .updatedDate(LocalDateTime.now())
+                    .role(1)
+                    .build();
+            return modelMapper.map(userRepo.save(user), NewUserResponse.class);
+        }
     }
 }
 
 
-
+//@Override
+//public NewUserResponse registerUser(NewUserRequest request) {
+//    Users user = Users.builder()
+//            .firstName(request.getFirstName())
+//            .lastName(request.getLastName())
+//            .userName(request.getUserName())
+//            .mail(request.getMail())
+//            .password(bCryptPasswordEncoder.encode(request.getPassword()))
+//            .createdDate(LocalDateTime.now())
+//            .updatedDate(LocalDateTime.now())
+//            .role(1)
+//            .build();
+//    return modelMapper.map(userRepo.save(user), NewUserResponse.class);
+//}
 
 
 //@Override
