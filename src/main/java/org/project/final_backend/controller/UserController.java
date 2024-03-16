@@ -27,3 +27,13 @@ public class UserController {
         return ResponseEntity.ok(userService.validateUser(request));
     }
 }
+
+
+
+//@PostMapping("")
+//public ResponseEntity<HttpResponse<NewUserResponse>> registerUser(@RequestBody NewUserRequest request){
+//
+//    HttpResponse<NewUserResponse> response =
+//            new HttpResponse<>(userService.registerUser(request), "Successfully registered", HttpStatus.CREATED);
+//    return new ResponseEntity<>(response, HttpStatus.CREATED);
+//}
