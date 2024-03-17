@@ -67,11 +67,6 @@ public class UserServiceImpl implements UserService {
             userRepo.save(user);
         }
     }
-//
-//    @Override
-//    public void sendOTP(String mail) {
-//        authService.generateOTP(mail);
-//    }
 
     @Override
     public void resetPasswordWithOTP(UUID id, ResetPasswordOTPRequest request) {

@@ -17,11 +17,6 @@ import org.project.final_backend.service.AuthService;
 public class AuthController {
     @Autowired
     private final AuthService authService;
-//    @GetMapping("/verify")
-//    public void verifyEmail(@RequestParam String mail) {
-//        System.out.println("Verifying mail " + mail);
-//        authService.verifyMailToRegister(mail);
-//    }
 
     @PostMapping("/newOTP")
     public ResponseEntity<HttpResponse<Boolean>> newOTP(@RequestBody NewOTPRequest request) {
@@ -30,12 +25,4 @@ public class AuthController {
                 new HttpResponse<>(true, "OTP is sent", HttpStatus.OK);
         return ResponseEntity.ok(response);
     }
-
-//    @PostMapping("validateOTP")
-//    public ResponseEntity<HttpResponse<Boolean>> validateOTP(@RequestBody ResetPasswordOTPRequest request) {
-//        boolean isValidate = authService.validateOTP(request);
-//        HttpResponse<Boolean> response =
-//                new HttpResponse<>(isValidate, "OTP is validated", HttpStatus.OK);
-//        return ResponseEntity.ok(response);
-//    }
 }
