@@ -2,10 +2,11 @@ package org.project.final_backend.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.project.final_backend.domain.NewUserRequest;
-import org.project.final_backend.domain.NewUserResponse;
-import org.project.final_backend.domain.UserInfo;
-import org.project.final_backend.domain.ValidateUserRequest;
+import org.project.final_backend.domain.request.NewUserRequest;
+import org.project.final_backend.domain.request.UpdateUserRequest;
+import org.project.final_backend.domain.response.NewUserResponse;
+import org.project.final_backend.dto.model.UserInfo;
+import org.project.final_backend.domain.request.ValidateUserRequest;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.InvalidPasswordException;
 import org.project.final_backend.exception.UserFoundException;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +29,14 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    public Users findUsersById(UUID id) {
+        final Users user = userRepo
+                .findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        return user;
+    }
+
+    @Override
     public UserInfo validateUser(ValidateUserRequest request) {
         final Users user = userRepo
                 .findUsersByMail(request.getMail())
@@ -35,6 +45,22 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordException("Invalid password!");
         }
         return modelMapper.map(user, UserInfo.class);
+    }
+
+    @Override
+    public UserInfo retrieveUserInfo(UUID id) {
+        final Users user = userRepo
+                .findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        return modelMapper.map(user, UserInfo.class);
+    }
+
+    @Override
+    public void deleteUser(UUID id) {
+        final Users user = userRepo
+                .findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        userRepo.delete(user);
     }
 
     @Override
@@ -49,40 +75,24 @@ public class UserServiceImpl implements UserService {
                     .mail(request.getMail())
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .createdDate(LocalDateTime.now())
-                    .updatedDate(LocalDateTime.now())
                     .role(1)
                     .build();
             return modelMapper.map(userRepo.save(user), NewUserResponse.class);
         }
     }
+
+    @Override
+    public NewUserResponse updateUser(UUID id, UpdateUserRequest request) {
+        Users user = userRepo.findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setUserName(request.getUserName());
+//        user.setMail(request.getMail());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setAddress(request.getAddress());
+        user.setDob(request.getDob());
+        user.setUpdatedDate(LocalDateTime.now());
+        return modelMapper.map(userRepo.save(user), NewUserResponse.class);
+    }
 }
-
-
-//@Override
-//public NewUserResponse registerUser(NewUserRequest request) {
-//    Users user = Users.builder()
-//            .firstName(request.getFirstName())
-//            .lastName(request.getLastName())
-//            .userName(request.getUserName())
-//            .mail(request.getMail())
-//            .password(bCryptPasswordEncoder.encode(request.getPassword()))
-//            .createdDate(LocalDateTime.now())
-//            .updatedDate(LocalDateTime.now())
-//            .role(1)
-//            .build();
-//    return modelMapper.map(userRepo.save(user), NewUserResponse.class);
-//}
-
-
-//@Override
-//public ValidateUserResponse validateUser(ValidateUserRequest request) {
-//    final Users user = userRepo
-//            .findUsersByMail(request.getMail())
-//            .orElseThrow(() -> new RuntimeException("User have not registered yet!"));
-//
-//    if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
-//        throw new RuntimeException("Invalid password!");
-//    }
-//
-//    return modelMapper.map(user, ValidateUserResponse.class);
-//}

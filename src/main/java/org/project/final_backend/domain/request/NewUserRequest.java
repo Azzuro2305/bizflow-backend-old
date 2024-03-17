@@ -1,4 +1,4 @@
-package org.project.final_backend.domain;
+package org.project.final_backend.domain.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,10 @@ import lombok.Setter;
 public class NewUserRequest {
     private String firstName;
     private String lastName;
-    private String userName;
+//    private String userName;
+    public String getUserName() {
+        return firstName + " " + lastName;
+    }
     private String mail;
     private String password;
 }

@@ -1,4 +1,4 @@
-package org.project.final_backend.domain;
+package org.project.final_backend.domain.request;
 
 import lombok.Getter;
 import lombok.Setter;
