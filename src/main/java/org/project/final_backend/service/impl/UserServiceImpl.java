@@ -2,11 +2,9 @@ package org.project.final_backend.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.project.final_backend.domain.request.NewUserRequest;
-import org.project.final_backend.domain.request.UpdateUserRequest;
+import org.project.final_backend.domain.request.*;
 import org.project.final_backend.domain.response.NewUserResponse;
 import org.project.final_backend.dto.model.UserInfo;
-import org.project.final_backend.domain.request.ValidateUserRequest;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.InvalidPasswordException;
 import org.project.final_backend.exception.UserFoundException;
@@ -27,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    AuthServiceImpl authService;
 
     @Override
     public Users findUsersById(UUID id) {
@@ -53,6 +53,37 @@ public class UserServiceImpl implements UserService {
                 .findUsersById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
         return modelMapper.map(user, UserInfo.class);
+    }
+
+    @Override
+    public void resetPassword(UUID id, ResetPasswordRequest request) {
+        final Users user = userRepo.findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        if (!bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("Invalid password!");
+        } else {
+            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+            user.setUpdatedDate(LocalDateTime.now());
+            userRepo.save(user);
+        }
+    }
+//
+//    @Override
+//    public void sendOTP(String mail) {
+//        authService.generateOTP(mail);
+//    }
+
+    @Override
+    public void resetPasswordWithOTP(UUID id, ResetPasswordOTPRequest request) {
+        final Users user = userRepo.findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        if (!authService.validateOTP(request)) {
+            throw new InvalidPasswordException("Invalid OTP!");
+        } else {
+            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+            user.setUpdatedDate(LocalDateTime.now());
+            userRepo.save(user);
+        }
     }
 
     @Override

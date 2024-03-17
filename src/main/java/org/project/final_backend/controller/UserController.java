@@ -1,10 +1,8 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
+import org.project.final_backend.domain.request.*;
 import org.project.final_backend.dto.model.UserInfo;
-import org.project.final_backend.domain.request.NewUserRequest;
-import org.project.final_backend.domain.request.UpdateUserRequest;
-import org.project.final_backend.domain.request.ValidateUserRequest;
 import org.project.final_backend.domain.response.NewUserResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.project.final_backend.service.UserService;
@@ -22,6 +20,18 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<UserInfo> retrieveUserInfo(@RequestParam UUID id){
         return ResponseEntity.ok(userService.retrieveUserInfo(id));
+    }
+
+    @PutMapping("/{id}/reset-password")
+    public ResponseEntity<Void> resetPassword(@PathVariable UUID id, @RequestBody ResetPasswordRequest request){
+        userService.resetPassword(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/reset-password-otp")
+    public ResponseEntity<Void> resetPasswordWithOTP(@PathVariable UUID id, @RequestBody ResetPasswordOTPRequest request){
+        userService.resetPasswordWithOTP(id, request);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
