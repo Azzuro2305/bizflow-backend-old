@@ -55,7 +55,9 @@ public class UserController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<UserInfo> validateUser(@RequestBody ValidateUserRequest request){
-        return ResponseEntity.ok(userService.validateUser(request));
+    public ResponseEntity<HttpResponse<UserInfo>> validateUser(@RequestBody ValidateUserRequest request){
+            HttpResponse<UserInfo> response =
+                    new HttpResponse<>(userService.validateUser(request), "User validated", HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

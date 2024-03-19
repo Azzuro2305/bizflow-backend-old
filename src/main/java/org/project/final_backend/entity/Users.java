@@ -27,7 +27,7 @@ public class Users {
     private String phoneNumber;
     private String password;
     private String address;
-    private Integer role;
+//    private Integer role;
     private LocalDate dob;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;

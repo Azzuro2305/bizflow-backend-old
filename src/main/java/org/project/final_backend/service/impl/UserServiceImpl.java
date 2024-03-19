@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
                     .mail(request.getMail())
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .createdDate(LocalDateTime.now())
-                    .role(1)
+//                    .role(1)
                     .build();
             return modelMapper.map(userRepo.save(user), NewUserResponse.class);
         }
