@@ -15,7 +15,7 @@ public class UpdateUserResponse {
     private String mail;
     private String phoneNumber;
     private String address;
-    private Integer role;
+//    private Integer role;
     private LocalDate dob;
     private LocalDateTime updatedDate;
     private String gender;
