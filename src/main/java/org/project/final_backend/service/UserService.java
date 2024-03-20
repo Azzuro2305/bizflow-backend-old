@@ -1,7 +1,11 @@
 package org.project.final_backend.service;
 
-import org.project.final_backend.domain.request.*;
-import org.project.final_backend.domain.response.NewUserResponse;
+import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
+import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.user.NewUserRequest;
+import org.project.final_backend.domain.request.user.UpdateUserRequest;
+import org.project.final_backend.domain.request.user.ValidateUserRequest;
+import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.entity.Users;
 

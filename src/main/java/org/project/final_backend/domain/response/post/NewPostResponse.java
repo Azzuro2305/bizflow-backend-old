@@ -1,4 +1,4 @@
-package org.project.final_backend.domain.response;
+package org.project.final_backend.domain.response.post;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class NewPostResponse {
-    private Integer id;
+    private UUID id;
     private String accountName;
     private Long followers;
     private LocalDateTime uploadTime;

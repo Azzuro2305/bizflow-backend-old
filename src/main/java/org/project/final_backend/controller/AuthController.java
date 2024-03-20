@@ -1,8 +1,7 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
-import org.project.final_backend.domain.request.NewOTPRequest;
-import org.project.final_backend.domain.request.ResetPasswordOTPRequest;
+import org.project.final_backend.domain.request.otp.NewOTPRequest;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

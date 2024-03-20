@@ -1,9 +1,13 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
-import org.project.final_backend.domain.request.*;
+import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
+import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.user.NewUserRequest;
+import org.project.final_backend.domain.request.user.UpdateUserRequest;
+import org.project.final_backend.domain.request.user.ValidateUserRequest;
 import org.project.final_backend.dto.model.UserInfo;
-import org.project.final_backend.domain.response.NewUserResponse;
+import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.project.final_backend.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -18,8 +22,10 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     @GetMapping("")
-    public ResponseEntity<UserInfo> retrieveUserInfo(@RequestParam UUID id){
-        return ResponseEntity.ok(userService.retrieveUserInfo(id));
+    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfo(@RequestParam UUID id){
+        HttpResponse<UserInfo> response =
+                new HttpResponse<>(userService.retrieveUserInfo(id), "User retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/reset-password")

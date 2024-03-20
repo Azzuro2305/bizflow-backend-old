@@ -2,18 +2,15 @@ package org.project.final_backend.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.project.final_backend.domain.request.NewPostRequest;
-import org.project.final_backend.domain.response.NewPostResponse;
-import org.project.final_backend.domain.response.NewUserResponse;
+import org.project.final_backend.domain.request.post.NewPostRequest;
+import org.project.final_backend.domain.response.post.NewPostResponse;
 import org.project.final_backend.dto.model.PostInfo;
 import org.project.final_backend.entity.Post;
-import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.UserNotFoundException;
 import org.project.final_backend.repo.PostRepo;
 import org.project.final_backend.service.PostService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -27,14 +24,14 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public Post findPostById(Integer id) {
+    public Post findPostById(UUID id) {
         final Post post=postRepo.findPostById(id)
                 .orElseThrow(()-> new UserNotFoundException("Post not found"));
         return post;
     }
 
     @Override
-    public PostInfo retrievePostInfo(Integer id) {
+    public PostInfo retrievePostInfo(UUID id) {
         final Post post=postRepo.findPostById(id)
                 .orElseThrow(()->new UserNotFoundException("Post not found "));
 
@@ -54,7 +51,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public NewPostResponse updatePost(Integer id, NewPostRequest request) {
+    public NewPostResponse updatePost(UUID id, NewPostRequest request) {
 //        Users user = userRepo.findUsersById(id)
 //                .orElseThrow(() -> new UserNotFoundException("User not found!"));
 //        user.setFirstName(request.getFirstName());
@@ -75,7 +72,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(Integer id) {
+    public void deletePost(UUID id) {
 
         final Post post=postRepo.findPostById(id).orElseThrow(()->new UserNotFoundException("Post not found "));
         postRepo.delete(post);
