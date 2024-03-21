@@ -21,9 +21,9 @@ public class CommentController {
 
     private CommentService commentService;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<HttpResponse<NewCommentResponse>> createComment(@PathVariable UUID id,@RequestBody NewCommentRequest request){
-        HttpResponse<NewCommentResponse> response = new HttpResponse<>(commentService.createComment(id,request),"comment created",HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<HttpResponse<NewCommentResponse>> createComment(@RequestParam UUID user_id, @RequestParam UUID post_id, @RequestBody NewCommentRequest request){
+        HttpResponse<NewCommentResponse> response = new HttpResponse<>(commentService.createComment(user_id, post_id, request),"comment created",HttpStatus.CREATED);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
@@ -42,11 +42,6 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<NewCommentResponse> deleteComment(@PathVariable UUID id){
         commentService.deleteComment(id);
-
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 }
