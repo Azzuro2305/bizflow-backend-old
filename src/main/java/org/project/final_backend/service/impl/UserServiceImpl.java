@@ -2,8 +2,12 @@ package org.project.final_backend.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.project.final_backend.domain.request.*;
-import org.project.final_backend.domain.response.NewUserResponse;
+import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
+import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.user.NewUserRequest;
+import org.project.final_backend.domain.request.user.UpdateUserRequest;
+import org.project.final_backend.domain.request.user.ValidateUserRequest;
+import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.InvalidPasswordException;
@@ -99,6 +103,8 @@ public class UserServiceImpl implements UserService {
                     .lastName(request.getLastName())
                     .userName(request.getUserName())
                     .mail(request.getMail())
+                    .bannerImg("https://i.pinimg.com/564x/c6/21/22/c62122464463d210a1864959c9b234f7.jpg")
+                    .profileImg("https://i.pinimg.com/564x/c6/21/22/c62122464463d210a1864959c9b234f7.jpg")
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .createdDate(LocalDateTime.now())
 //                    .role(1)
@@ -111,14 +117,18 @@ public class UserServiceImpl implements UserService {
     public NewUserResponse updateUser(UUID id, UpdateUserRequest request) {
         Users user = userRepo.findUsersById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setUserName(request.getUserName());
-//        user.setMail(request.getMail());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setAddress(request.getAddress());
-        user.setDob(request.getDob());
+        user.setFirstName(request.getFirstName() != null ? request.getFirstName() : user.getFirstName());
+        user.setLastName(request.getLastName() != null ? request.getLastName() : user.getLastName());
+        user.setUserName(request.getUserName() != null ? request.getUserName() : user.getUserName());
+        user.setMail(request.getMail() != null ? request.getMail() : user.getMail());
+        user.setPhoneNumber(request.getPhoneNumber() != null ? request.getPhoneNumber() : user.getPhoneNumber());
+        user.setAddress(request.getAddress() != null ? request.getAddress() : user.getAddress());
+        user.setBannerImg(request.getBannerImg() != null ? request.getBannerImg() : user.getBannerImg());
+        user.setProfileImg(request.getProfileImg() != null ? request.getProfileImg() : user.getProfileImg());
+        user.setDob(request.getDob() != null ? request.getDob() : user.getDob());
+        user.setGender(request.getGender() != null ? request.getGender() : user.getGender());
         user.setUpdatedDate(LocalDateTime.now());
-        return modelMapper.map(userRepo.save(user), NewUserResponse.class);
+        Users updatedUser = userRepo.save(user);
+        return modelMapper.map(updatedUser, NewUserResponse.class);
     }
 }

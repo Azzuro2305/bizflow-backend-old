@@ -11,29 +11,22 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users {
+@Builder
+public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private String mail;
-    private String phoneNumber;
-    private String password;
-    private String address;
-    private String bannerImg;
-    private String profileImg;
-    private String bio;
-    private long followers;
-    private long following;
-    private String role;
-    private LocalDate dob;
+    private String schoolName;
+    private String degree;
+    private String fieldOfStudy;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
-    private String gender;
     private boolean isDeleted;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
 }

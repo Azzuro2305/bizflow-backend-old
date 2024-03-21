@@ -1,0 +1,16 @@
+package org.project.final_backend.service;
+
+import org.project.final_backend.domain.request.workexp.NewWorkExpRequest;
+import org.project.final_backend.domain.request.workexp.UpdateWorkExpRequest;
+import org.project.final_backend.domain.response.workexp.NewWorkExpResponse;
+import org.project.final_backend.domain.response.workexp.UpdateWorkExpResponse;
+import org.project.final_backend.dto.model.WorkExpInfo;
+
+import java.util.UUID;
+
+public interface WorkExpService {
+    NewWorkExpResponse addWorkExp(UUID id, NewWorkExpRequest request);
+    WorkExpInfo getWorkExp(UUID id);
+    UpdateWorkExpResponse updateWorkExp(UUID id, UpdateWorkExpRequest request);
+    void deleteWorkExp(UUID id);
+}

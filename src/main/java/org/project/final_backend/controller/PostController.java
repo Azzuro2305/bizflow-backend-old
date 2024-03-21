@@ -1,10 +1,8 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
-import org.project.final_backend.domain.request.NewPostRequest;
-import org.project.final_backend.domain.request.NewUserRequest;
-import org.project.final_backend.domain.request.UpdateUserRequest;
-import org.project.final_backend.domain.response.NewPostResponse;
+import org.project.final_backend.domain.request.post.NewPostRequest;
+import org.project.final_backend.domain.response.post.NewPostResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.project.final_backend.dto.model.PostInfo;
 import org.project.final_backend.service.PostService;
@@ -31,19 +29,19 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<PostInfo> retrievePostInfo(@RequestParam Integer id){
+    public ResponseEntity<PostInfo> retrievePostInfo(@RequestParam UUID id){
         return ResponseEntity.ok(postService.retrievePostInfo(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NewPostResponse> updatePost(@PathVariable Integer id, @RequestBody NewPostRequest request){
+    public ResponseEntity<NewPostResponse> updatePost(@PathVariable UUID id, @RequestBody NewPostRequest request){
         NewPostResponse response= postService.updatePost(id,request);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<NewPostResponse> deletePost(@PathVariable Integer id){
+    public ResponseEntity<NewPostResponse> deletePost(@PathVariable UUID id){
         postService.deletePost(id);
 
         return ResponseEntity.noContent().build();

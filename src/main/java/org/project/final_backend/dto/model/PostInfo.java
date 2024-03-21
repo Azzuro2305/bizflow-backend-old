@@ -10,14 +10,13 @@ import java.util.UUID;
 @Getter
 @Setter
 public class PostInfo {
-
-    private Integer id;
+    private UUID id;
     private String accountName;
-    private Long followers;
+    private long followers;
     private LocalDateTime uploadTime;
     private String profile;
     private String caption;
     private String uploadPhoto;
-    private double like;
+    private long like;
     private String comment;
 }
