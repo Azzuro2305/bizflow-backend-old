@@ -2,9 +2,7 @@ package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
 import org.project.final_backend.domain.request.NewCommentRequest;
-import org.project.final_backend.domain.request.NewPostRequest;
 import org.project.final_backend.domain.response.NewCommentResponse;
-import org.project.final_backend.domain.response.NewPostResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.project.final_backend.dto.model.CommentInfo;
 import org.project.final_backend.dto.model.PostInfo;
