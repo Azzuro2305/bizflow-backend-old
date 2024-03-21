@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.request.NewCommentRequest;
 import org.project.final_backend.domain.response.NewCommentResponse;
-import org.project.final_backend.domain.response.NewPostResponse;
 import org.project.final_backend.dto.model.CommentInfo;
 import org.project.final_backend.entity.Comment;
 import org.project.final_backend.entity.Post;
@@ -38,12 +37,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public NewCommentResponse createComment(UUID id, NewCommentRequest request) {
-        Users user = userRepo.findUsersById(id)
+    public NewCommentResponse createComment(UUID user_id, UUID post_id, NewCommentRequest request) {
+        Users user = userRepo.findUsersById(user_id)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
       Comment comment = Comment.builder()
                 .text(request.getText())
-              .userName(user.getUserName())
+                .userName(user.getUserName())
+                .userprofile(user.getProfileImg())
+                .post(Post.builder().id(post_id).build())
                 .build();
 
         return modelMapper.map(commentRepo.save(comment), NewCommentResponse.class);

@@ -2,9 +2,7 @@ package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
 import org.project.final_backend.domain.request.NewCommentRequest;
-import org.project.final_backend.domain.request.NewPostRequest;
 import org.project.final_backend.domain.response.NewCommentResponse;
-import org.project.final_backend.domain.response.NewPostResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.project.final_backend.dto.model.CommentInfo;
 import org.project.final_backend.dto.model.PostInfo;
@@ -23,9 +21,9 @@ public class CommentController {
 
     private CommentService commentService;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<HttpResponse<NewCommentResponse>> createComment(@PathVariable UUID id,@RequestBody NewCommentRequest request){
-        HttpResponse<NewCommentResponse> response = new HttpResponse<>(commentService.createComment(id,request),"comment created",HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<HttpResponse<NewCommentResponse>> createComment(@RequestParam UUID user_id, @RequestParam UUID post_id, @RequestBody NewCommentRequest request){
+        HttpResponse<NewCommentResponse> response = new HttpResponse<>(commentService.createComment(user_id, post_id, request),"comment created",HttpStatus.CREATED);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
@@ -44,11 +42,6 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<NewCommentResponse> deleteComment(@PathVariable UUID id){
         commentService.deleteComment(id);
-
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 }
