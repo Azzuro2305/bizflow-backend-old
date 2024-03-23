@@ -1,6 +1,7 @@
 package org.project.final_backend.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
@@ -20,6 +21,8 @@ import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -120,7 +123,7 @@ public class UserServiceImpl implements UserService {
                     .lastName(request.getLastName())
                     .userName(request.getUserName())
                     .mail(request.getMail())
-                    .bannerImg("https://as1.ftcdn.net/v2/jpg/05/36/23/60/1000_F_536236056_8tA6RPhBAjvvmTnoHckrfKuw4JzEZlJ8.jpg")
+                    .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
                     .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .createdDate(LocalDateTime.now())
@@ -155,5 +158,9 @@ public class UserServiceImpl implements UserService {
         long followersCount = followerRepo.countByUser_Id(userId);
         user.setFollowers(followersCount);
         userRepo.save(user);
+    }
+
+    public Page<Users> getAllUsers(Pageable pageable) {
+        return userRepo.findAll(pageable);
     }
 }

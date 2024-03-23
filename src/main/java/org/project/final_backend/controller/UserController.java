@@ -1,6 +1,7 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
 import org.project.final_backend.domain.request.password.VerifyMailRequest;
@@ -11,12 +12,20 @@ import org.project.final_backend.domain.response.VerifyMailResponse;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
+import org.project.final_backend.entity.Users;
 import org.project.final_backend.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -73,5 +82,21 @@ public class UserController {
             HttpResponse<UserInfo> response =
                     new HttpResponse<>(userService.validateUser(request), "User validated", HttpStatus.OK);
             return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-users")
+    public ResponseEntity<Page<Users>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestParam(defaultValue = "userName,asc") String[] sort) {
+        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
+                .map(s -> s.split(","))
+                .map(arr -> arr.length > 1 ? (arr[1].equals("desc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("userName"))
+                .collect(Collectors.toList()))
+                .stream()
+                .collect(Collectors.toList());
+        Sort sorting = Sort.by(orders);
+        Page<Users> usersPage = userService.getAllUsers(PageRequest.of(page, size, sorting));
+        return new ResponseEntity<>(usersPage, HttpStatus.OK);
     }
 }
