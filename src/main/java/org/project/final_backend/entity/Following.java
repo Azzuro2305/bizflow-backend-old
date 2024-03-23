@@ -1,9 +1,6 @@
 package org.project.final_backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -18,7 +15,11 @@ public class Following {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID userId;
-    private UUID followingId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+    @ManyToOne
+    @JoinColumn(name = "following_id")
+    private Users following;
     private boolean isDeleted;
 }

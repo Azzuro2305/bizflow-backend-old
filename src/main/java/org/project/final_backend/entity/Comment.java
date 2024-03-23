@@ -12,15 +12,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String userName;
     private String userprofile;
     private String text;
-
-
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;

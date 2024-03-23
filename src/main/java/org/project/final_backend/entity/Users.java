@@ -18,6 +18,9 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+//    public UUID getId() {
+//        return id;
+//    }
     private String firstName;
     private String lastName;
     private String userName;
@@ -28,12 +31,18 @@ public class Users {
     private String bannerImg;
     private String profileImg;
     private String bio;
+
     private long followers;
     private long following;
+    private long friends;
+    private long posts;
+
     private String role;
     private LocalDate dob;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private String gender;
     private boolean isDeleted;
+
+
 }

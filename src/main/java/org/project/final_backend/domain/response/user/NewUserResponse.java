@@ -20,7 +20,7 @@ public class NewUserResponse {
     private String phoneNumber;
     private String password;
     private String address;
-//    private Integer role;
+    private String role;
     private LocalDate dob;
     private LocalDateTime createdDate;
     private String gender;

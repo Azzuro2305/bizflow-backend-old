@@ -3,9 +3,11 @@ package org.project.final_backend.controller;
 import lombok.AllArgsConstructor;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.password.VerifyMailRequest;
 import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
 import org.project.final_backend.domain.request.user.ValidateUserRequest;
+import org.project.final_backend.domain.response.VerifyMailResponse;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
@@ -28,9 +30,16 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/reset-password")
-    public ResponseEntity<Void> resetPassword(@PathVariable UUID id, @RequestBody ResetPasswordRequest request){
-        userService.resetPassword(id, request);
+    @PostMapping("/verify-mail")
+    public ResponseEntity<HttpResponse<VerifyMailResponse>> verifyMail(@RequestBody VerifyMailRequest request){
+        HttpResponse<VerifyMailResponse> response =
+                new HttpResponse<>(userService.verifyMail(request), "Mail verified", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request){
+        userService.resetPassword(request);
         return ResponseEntity.noContent().build();
     }
 
@@ -44,7 +53,6 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id){
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
-//        return ResponseEntity.ok("User successfully deleted");
     }
 
     @PutMapping("/{id}")

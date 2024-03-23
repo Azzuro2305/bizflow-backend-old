@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface FollowerRepo extends JpaRepository<Follower, UUID> {
-
+    long countByUser_Id(UUID userId);
 }
