@@ -55,7 +55,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public Page<Post> getAllPosts(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "uploadTime,desc") String[] sort) {
         List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)

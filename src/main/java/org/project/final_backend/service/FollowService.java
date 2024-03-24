@@ -4,4 +4,5 @@ import java.util.UUID;
 
 public interface FollowService {
     long countByUser_Id(UUID userId);
+
 }
