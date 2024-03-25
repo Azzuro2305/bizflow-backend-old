@@ -33,7 +33,7 @@ public class Users {
     private String bio;
 
     private long followers;
-    private long followings;
+    private long following;
     private long friends;
     private long posts;
 
