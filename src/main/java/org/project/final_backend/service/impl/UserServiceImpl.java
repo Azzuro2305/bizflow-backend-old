@@ -1,7 +1,6 @@
 package org.project.final_backend.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
@@ -20,7 +19,6 @@ import org.project.final_backend.repo.FollowerRepo;
 import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
