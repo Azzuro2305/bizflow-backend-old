@@ -1,7 +1,6 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
 import org.project.final_backend.domain.request.password.VerifyMailRequest;
