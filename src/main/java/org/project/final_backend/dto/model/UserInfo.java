@@ -26,8 +26,12 @@ public class UserInfo {
     private String bannerImg;
     private String profileImg;
     private String bio;
+
     private long followers;
-    private long following;
+    private long followings;
+    private long friends;
+    private long posts;
+
     private String role;
     private LocalDate dob;
     private LocalDateTime createdDate;

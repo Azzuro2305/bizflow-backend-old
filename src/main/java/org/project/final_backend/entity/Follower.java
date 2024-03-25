@@ -3,6 +3,7 @@ package org.project.final_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,10 +19,14 @@ public class Follower {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
-//    private UUID userId;
     @ManyToOne
     @JoinColumn(name = "follower_id")
     private Users follower;
-//    private UUID followerId;
+    private LocalDateTime followedAt;
     private boolean isDeleted;
 }
+
+// This entity is to describe the relationship between users and their followers.
+// No.    User    User's followers
+// 1    @user1    @user2
+// 1    @user1    @user3

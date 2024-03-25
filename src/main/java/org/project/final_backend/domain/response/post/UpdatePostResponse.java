@@ -1,16 +1,14 @@
-package org.project.final_backend.domain.request.post;
+package org.project.final_backend.domain.response.post;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 
 @Getter
 @Setter
-public class NewPostRequest {
-    private UUID userId;
+public class UpdatePostResponse {
     private String caption;
     private String uploadPhoto;
+    private LocalDateTime updateTime;
 }

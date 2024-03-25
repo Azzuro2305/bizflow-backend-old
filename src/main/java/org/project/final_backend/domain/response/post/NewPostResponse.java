@@ -11,12 +11,12 @@ import java.util.UUID;
 public class NewPostResponse {
     private UUID id;
     private String accountName;
-    private Long followers;
+    private long followers;
     private LocalDateTime uploadTime;
-    private String profileImage;
+    private String profileImg;
     private String caption;
     private String uploadPhoto;
-    private Long react;
-    private String comment;
+    private long react;
+    private long comment;
     private boolean isDeleted;
 }

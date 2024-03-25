@@ -20,15 +20,17 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    private String uploadPhoto;
     private String accountName;
-    private Long followers;
+    private String profileImg;
+    @Lob
+    private String caption;
+    private long followers;
+    private long react;
+    private long comment;
+    private long repost;
     private LocalDateTime uploadTime;
     private LocalDateTime updateTime;
-    private String profileImage;
-    private String caption;
-    private String uploadPhoto;
-    private double react;
-//    private String comment;
     private boolean isDeleted;
 //    @OneToMany
 //    @JoinColumn(name = "user_id")
