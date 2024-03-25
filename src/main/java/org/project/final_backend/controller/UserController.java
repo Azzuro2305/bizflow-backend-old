@@ -86,7 +86,7 @@ public class UserController {
 
     @GetMapping("/get-all-users")
     public ResponseEntity<Page<Users>> getAllUsers(
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size,
             @RequestParam(defaultValue = "userName,asc") String[] sort) {
         List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)

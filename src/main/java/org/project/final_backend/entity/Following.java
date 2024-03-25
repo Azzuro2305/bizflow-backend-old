@@ -3,6 +3,7 @@ package org.project.final_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,5 +22,6 @@ public class Following {
     @ManyToOne
     @JoinColumn(name = "following_id")
     private Users following;
+    private LocalDateTime followedAt;
     private boolean isDeleted;
 }

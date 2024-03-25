@@ -33,7 +33,7 @@ public class Users {
     private String bio;
 
     private long followers;
-    private long following;
+    private long followings;
     private long friends;
     private long posts;
 
@@ -42,6 +42,7 @@ public class Users {
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private String gender;
+//    private boolean isBanned;
     private boolean isDeleted;
 
 

@@ -6,6 +6,7 @@ import org.project.final_backend.domain.request.post.UpdatePostRequest;
 import org.project.final_backend.domain.response.post.NewPostResponse;
 import org.project.final_backend.domain.response.post.UpdatePostResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
+import org.project.final_backend.dto.model.PostDto;
 import org.project.final_backend.dto.model.PostInfo;
 import org.project.final_backend.entity.Post;
 import org.project.final_backend.service.PostService;
@@ -54,8 +55,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public Page<Post> getAllPosts(
-            @RequestParam(defaultValue = "1") int page,
+    public Page<PostDto> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "uploadTime,desc") String[] sort) {
         List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)

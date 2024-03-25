@@ -28,7 +28,7 @@ public class UserInfo {
     private String bio;
 
     private long followers;
-    private long following;
+    private long followings;
     private long friends;
     private long posts;
 

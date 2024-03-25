@@ -23,6 +23,7 @@ public class Post {
     private String uploadPhoto;
     private String accountName;
     private String profileImg;
+    @Lob
     private String caption;
     private long followers;
     private long react;
