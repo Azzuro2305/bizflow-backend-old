@@ -16,7 +16,9 @@ import org.project.final_backend.service.EducationService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -68,5 +70,13 @@ public class EducationServiceImpl implements EducationService {
         Education education = educationRepo.findEducationById(id)
                 .orElseThrow(() -> new UserNotFoundException("Education not found"));
         educationRepo.delete(education);
+    }
+
+    @Override
+    public List<EducationInfo> getAllEducationsByUserId(UUID userId) {
+        List<Education> educations = educationRepo.findAllByUserId(userId);
+        return educations.stream()
+                .map(education -> modelMapper.map(education, EducationInfo.class))
+                .collect(Collectors.toList());
     }
 }

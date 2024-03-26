@@ -15,11 +15,12 @@ import java.util.UUID;
 
 public interface PostService {
     Post findPostById(UUID id);
+//    Post findPostByUsersId(UUID id);
+    List<Post> findPostsByUsersId(UUID userId);
     PostInfo retrievePostInfo(UUID id);
     NewPostResponse createPost(NewPostRequest request);
     UpdatePostResponse updatePost(UpdatePostRequest request);
     void deletePost(UUID id);
     Page<PostDto> getAllPosts(Pageable pageable);
-
     Page<Post> getAllPosts(int pageNumber,String searchKey);
 }

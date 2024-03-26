@@ -85,6 +85,11 @@ public class PostServiceImpl implements PostService {
 //        return modelMapper;
 //    }
 
+    @Override
+    public List<Post> findPostsByUsersId(UUID userId) {
+        return postRepo.findPostsByUsers_Id(userId);
+    }
+
     @Bean
     public ModelMapper customModelMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -111,8 +116,6 @@ public class PostServiceImpl implements PostService {
          return (Page<Post>) postRepo.findByAccountNameContainingIgnoreCaseOrCaptionContainingIgnoreCase(
                     searchKey,searchKey,pageable
             );
-
         }
-
     }
 }

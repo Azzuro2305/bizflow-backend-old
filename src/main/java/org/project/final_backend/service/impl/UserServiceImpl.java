@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.password.ResetPasswordUserIdRequest;
 import org.project.final_backend.domain.request.password.VerifyMailRequest;
 import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
@@ -81,6 +82,19 @@ public class UserServiceImpl implements UserService {
     public void resetPassword(ResetPasswordRequest request) {
         final Users user = userRepo.findUsersById(userRepo.findUsersByMail(request.getMail()).get().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found in database!"));
+        if (!bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("Invalid password!");
+        } else {
+            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+            user.setUpdatedDate(LocalDateTime.now());
+            userRepo.save(user);
+        }
+    }
+
+    @Override
+    public void resetPasswordWithUserId(UUID id, ResetPasswordUserIdRequest request) {
+        final Users user = userRepo.findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
         if (!bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Invalid password!");
         } else {

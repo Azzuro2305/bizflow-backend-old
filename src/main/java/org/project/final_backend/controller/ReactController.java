@@ -32,9 +32,9 @@ public class ReactController {
 //
 //        return new ResponseEntity<>(response,HttpStatus.OK);
 //    }
-//    @DeleteMapping
-//    public ResponseEntity<Void> deleteReact(@RequestParam UUID id){
-//        reactService.deleteReact(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @DeleteMapping
+    public ResponseEntity<Void> deleteReact(@RequestParam UUID id){
+        reactService.deleteReact(id);
+        return ResponseEntity.noContent().build();
+    }
 }

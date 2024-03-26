@@ -3,6 +3,7 @@ package org.project.final_backend.controller;
 import lombok.AllArgsConstructor;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.password.ResetPasswordUserIdRequest;
 import org.project.final_backend.domain.request.password.VerifyMailRequest;
 import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
@@ -48,6 +49,12 @@ public class UserController {
     @PutMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request){
         userService.resetPassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/reset-password")
+    public ResponseEntity<Void> resetPasswordWithUserId(@PathVariable UUID id, @RequestBody ResetPasswordUserIdRequest request){
+        userService.resetPasswordWithUserId(id, request);
         return ResponseEntity.noContent().build();
     }
 

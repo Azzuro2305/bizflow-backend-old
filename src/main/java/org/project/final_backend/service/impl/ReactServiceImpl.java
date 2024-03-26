@@ -43,18 +43,23 @@ public class ReactServiceImpl implements ReactService {
 
         if (reactRepo.findReactByPostAndUser(postId, userId).isPresent()) {
             throw new RuntimeException("You've already reacted");
-        }
+        } else {
+            React react = React.builder()
+                    .postId(post)
+                    .userId(user)
+                    .build();
+            post.setReact(post.getReact() + 1);
+            postRepo.save(post);
 
-        React react = React.builder()
-                .postId(post)
-                .userId(user)
-                .build();
-        return modelMapper.map(reactRepo.save(react), NewReactResponse.class);
+            return modelMapper.map(reactRepo.save(react), NewReactResponse.class);
+        }
     }
 
     @Override
     public void deleteReact(UUID id) {
         React react = reactRepo.findReactById(id).orElseThrow(()-> new UserFoundException("react not found"));
+        Post post = react.getPostId();
+        post.setReact(post.getReact() - 1);
         reactRepo.delete(react);
     }
 }

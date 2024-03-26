@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,5 +46,12 @@ public class EducationController {
     public ResponseEntity<Void> deleteEducation(@PathVariable UUID id){
         educationService.deleteEducation(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<HttpResponse<List<EducationInfo>>> getAllEducationsByUserId(@PathVariable UUID userId){
+        HttpResponse<List<EducationInfo>> response =
+                new HttpResponse<>(educationService.getAllEducationsByUserId(userId), "Educations retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

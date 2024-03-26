@@ -6,11 +6,13 @@ import org.project.final_backend.domain.response.education.NewEducationResponse;
 import org.project.final_backend.domain.response.education.UpdateEducationResponse;
 import org.project.final_backend.dto.model.EducationInfo;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface EducationService {
     NewEducationResponse addEducation(UUID id, NewEducationRequest request);
     EducationInfo getEducation(UUID id);
     UpdateEducationResponse updateEducation(UUID id, UpdateEducationRequest request);
+    List<EducationInfo> getAllEducationsByUserId(UUID userId);
     void deleteEducation(UUID id);
 }

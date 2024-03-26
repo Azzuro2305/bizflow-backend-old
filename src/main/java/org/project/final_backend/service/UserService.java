@@ -2,6 +2,7 @@ package org.project.final_backend.service;
 
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
+import org.project.final_backend.domain.request.password.ResetPasswordUserIdRequest;
 import org.project.final_backend.domain.request.password.VerifyMailRequest;
 import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
@@ -23,6 +24,7 @@ public interface UserService {
     NewUserResponse updateUser(UUID id, UpdateUserRequest request);
     UserInfo retrieveUserInfo(UUID id);
     void resetPassword(ResetPasswordRequest request);
+    void resetPasswordWithUserId(UUID id, ResetPasswordUserIdRequest request);
     void resetPasswordWithOTP(UUID id, ResetPasswordOTPRequest request);
     void deleteUser(UUID id);
     Page<Users> getAllUsers(Pageable pageable);

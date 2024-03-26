@@ -16,7 +16,9 @@ import org.project.final_backend.service.WorkExpService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -60,6 +62,14 @@ public class WorkExpServiceImpl implements WorkExpService {
         workExp.setUpdatedDate(LocalDateTime.now());
         WorkExp updatedWorkExp = workExpRepo.save(workExp);
         return modelMapper.map(updatedWorkExp, UpdateWorkExpResponse.class);
+    }
+
+    @Override
+    public List<WorkExpInfo> getAllWorkExp(UUID userId) {
+        List<WorkExpInfo> workExps = workExpRepo.findAllByUserId(userId);
+        return workExps.stream()
+                .map(workExp -> modelMapper.map(workExp, WorkExpInfo.class))
+                .collect(Collectors.toList());
     }
 
     @Override

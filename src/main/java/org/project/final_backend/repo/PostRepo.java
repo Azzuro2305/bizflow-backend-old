@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface PostRepo extends JpaRepository<Post, UUID> {
     Optional<Post> findPostById(UUID id);
-    Optional<Post> findPostByUsersId(UUID id);
+    List<Post> findPostsByUsers_Id(UUID userId);
     Page<Post> findAll(Pageable pageable);
 
     Page<Post> findByAccountNameContainingIgnoreCaseOrCaptionContainingIgnoreCase(

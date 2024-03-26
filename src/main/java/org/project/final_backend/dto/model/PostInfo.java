@@ -18,5 +18,5 @@ public class PostInfo {
     private String caption;
     private String uploadPhoto;
     private long like;
-    private String comment;
+    private Long comment;
 }

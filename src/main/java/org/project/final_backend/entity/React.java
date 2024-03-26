@@ -11,6 +11,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(
+    name = "react",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"})
+)
 public class React {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,6 +26,6 @@ public class React {
     @JoinColumn(name = "user_id")
     private Users userId;
     //    private String type;
-    private boolean isDeleted;
-    private boolean isLiked;
+//    private boolean isDeleted;
+//    private boolean isLiked;
 }

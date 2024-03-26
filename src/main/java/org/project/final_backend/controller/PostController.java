@@ -1,6 +1,7 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.request.post.NewPostRequest;
 import org.project.final_backend.domain.request.post.UpdatePostRequest;
 import org.project.final_backend.domain.response.post.NewPostResponse;
@@ -13,6 +14,7 @@ import org.project.final_backend.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/feed")
 public class PostController {
     private PostService postService;
+    private final ModelMapper modelMapper;
 
     @PostMapping
     public ResponseEntity<HttpResponse<NewPostResponse>> createPost(@RequestBody NewPostRequest request) {
@@ -69,6 +72,24 @@ public class PostController {
         return postService.getAllPosts(PageRequest.of(page, size, sorting));
     }
 
+//    @GetMapping("/posts/{userId}")
+//    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable UUID userId) {
+//        return ResponseEntity.ok(postService.findPostsByUsersId(userId));
+//    }
+
+    @GetMapping("/posts/{userId}")
+    public ResponseEntity<List<PostInfo>> getPostsByUserId(@PathVariable UUID userId) {
+        List<Post> posts = postService.findPostsByUsersId(userId);
+        List<PostInfo> postInfos = posts.stream()
+                .map(post -> modelMapper.map(post, PostInfo.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(postInfos);
+    }
+
+//    @GetMapping("/{postId}")
+//    public Post getPostById(@PathVariable UUID postId) {
+//        return postService.findPostById(postId);
+//    }
 
     @GetMapping("/search")
     public Page<Post> getALlPosts(
@@ -77,7 +98,6 @@ public class PostController {
     ) {
 
         Page<Post> result = postService.getAllPosts(pageNumber, searchKey);
-        //  System.out.println("Result is "+result.getSize());
         return result;
     }
 
