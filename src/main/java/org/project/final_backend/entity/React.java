@@ -24,5 +24,4 @@ public class React {
     //    private String type;
     private boolean isDeleted;
     private boolean isLiked;
-
 }

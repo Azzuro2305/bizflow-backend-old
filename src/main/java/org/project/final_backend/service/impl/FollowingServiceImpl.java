@@ -27,7 +27,7 @@ public class FollowingServiceImpl implements FollowingService {
     public void updateFollowingCount(UUID userId) {
         Users user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         long followingCount = countByUser_Id(userId);
-        user.setFollowing(followingCount);
+        user.setFollowings(followingCount);
         userRepo.save(user);
     }
 

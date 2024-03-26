@@ -11,4 +11,6 @@ public interface ReactService {
 
     React findReactById(UUID id);
     NewReactResponse createReact(NewReactRequest request);
+
+    void deleteReact(UUID id);
 }

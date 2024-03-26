@@ -41,6 +41,10 @@ public class ReactServiceImpl implements ReactService {
         Users user = userRepo.findUsersById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Post post = postRepo.findPostById(postId).orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (reactRepo.findReactByPostAndUser(postId, userId).isPresent()) {
+            throw new RuntimeException("You've already reacted");
+        }
+
         React react = React.builder()
                 .postId(post)
                 .userId(user)
@@ -48,48 +52,9 @@ public class ReactServiceImpl implements ReactService {
         return modelMapper.map(reactRepo.save(react), NewReactResponse.class);
     }
 
-//    @Override
-//    public NewCommentResponse createReact(UUID user_id, UUID post_id, NewReactRequest request) {
-////        reactRepo.findReactById(user_id,post_id.equals(false))
-////                .orElseThrow( ()-> new RuntimeException("You've already reacted"));
-//           React react = React.builder()
-//                    .postId(request.getPostId())
-//                            .userId(request.getUserId())
-//                   .build();
-//
-//        return ;
-//    }
-
-
+    @Override
+    public void deleteReact(UUID id) {
+        React react = reactRepo.findReactById(id).orElseThrow(()-> new UserFoundException("react not found"));
+        reactRepo.delete(react);
+    }
 }
-
-//    @Override
-//    public void createReact(UUID user_id, UUID post_id) {
-////        reactRepo.findReactByPostIdAndUserId(user_id,post_id.equals(false))
-////                .orElseThrow( ()-> new RuntimeException("You've already reacted"));
-////
-//        boolean hasReacted=reactRepo.findReactByPostIdAndUserId(user_id,post_id) !=null;
-////
-//
-//        if (!hasReacted){
-//
-//
-//            React react = React.builder()
-//                    .userId(Users.builder().id(user_id).build())
-//                    .postId(Post.builder().id(post_id).build())
-//                    .isLiked(true)
-//                    .build();
-//
-//            react.setLiked(true);
-//            reactRepo.save(react);
-//          }
-//        else {
-//            throw new RuntimeException("You've already reacted");
-//        }
-
-
-
-//        return modelMapper.map(commentRepo.save(comment), NewCommentResponse.class);
-
-
-
