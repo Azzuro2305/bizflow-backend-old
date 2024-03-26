@@ -16,11 +16,13 @@ import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.PostService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -96,5 +98,21 @@ public class PostServiceImpl implements PostService {
     public Page<PostDto> getAllPosts(Pageable pageable) {
         Page<Post> posts = postRepo.findAll(pageable);
         return posts.map(post -> customModelMapper().map(post, PostDto.class));
+    }
+
+    @Override
+    public Page<Post> getAllPosts(int pageNumber, String searchKey) {
+        Pageable pageable= PageRequest.of(pageNumber,12);
+
+        if (searchKey .equals("")){
+            return (Page<Post>) postRepo.findAll(pageable);
+        }
+        else {
+         return (Page<Post>) postRepo.findByAccountNameContainingIgnoreCaseOrCaptionContainingIgnoreCase(
+                    searchKey,searchKey,pageable
+            );
+
+        }
+
     }
 }

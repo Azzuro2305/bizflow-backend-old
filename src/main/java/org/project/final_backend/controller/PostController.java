@@ -28,28 +28,28 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RequestMapping("/feed")
 public class PostController {
-     private PostService postService;
+    private PostService postService;
 
     @PostMapping
-    public ResponseEntity<HttpResponse<NewPostResponse>> createPost(@RequestBody NewPostRequest request){
-        HttpResponse<NewPostResponse> response=new HttpResponse<>(postService.createPost(request),"Successfully upload",HttpStatus.CREATED);
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
+    public ResponseEntity<HttpResponse<NewPostResponse>> createPost(@RequestBody NewPostRequest request) {
+        HttpResponse<NewPostResponse> response = new HttpResponse<>(postService.createPost(request), "Successfully upload", HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<HttpResponse<PostInfo>> retrievePostInfo(@RequestParam UUID postId){
-        HttpResponse<PostInfo> response=new HttpResponse<>(postService.retrievePostInfo(postId),"Successfully retrieved",HttpStatus.OK);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<HttpResponse<PostInfo>> retrievePostInfo(@RequestParam UUID postId) {
+        HttpResponse<PostInfo> response = new HttpResponse<>(postService.retrievePostInfo(postId), "Successfully retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<HttpResponse<UpdatePostResponse>> updatePost(@RequestBody UpdatePostRequest request){
-        HttpResponse<UpdatePostResponse> response=new HttpResponse<>(postService.updatePost(request),"Successfully updated",HttpStatus.OK);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<HttpResponse<UpdatePostResponse>> updatePost(@RequestBody UpdatePostRequest request) {
+        HttpResponse<UpdatePostResponse> response = new HttpResponse<>(postService.updatePost(request), "Successfully updated", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable UUID postId){
+    public ResponseEntity<Void> deletePost(@PathVariable UUID postId) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
@@ -68,4 +68,17 @@ public class PostController {
         Sort sorting = Sort.by(orders);
         return postService.getAllPosts(PageRequest.of(page, size, sorting));
     }
+
+
+    @GetMapping("/search")
+    public Page<Post> getALlPosts(
+            @RequestParam int pageNumber,
+            @RequestParam(defaultValue = "") String searchKey
+    ) {
+
+        Page<Post> result = postService.getAllPosts(pageNumber, searchKey);
+        //  System.out.println("Result is "+result.getSize());
+        return result;
+    }
+
 }

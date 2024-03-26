@@ -10,6 +10,7 @@ import org.project.final_backend.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface PostService {
@@ -19,4 +20,6 @@ public interface PostService {
     UpdatePostResponse updatePost(UpdatePostRequest request);
     void deletePost(UUID id);
     Page<PostDto> getAllPosts(Pageable pageable);
+
+    Page<Post> getAllPosts(int pageNumber,String searchKey);
 }
