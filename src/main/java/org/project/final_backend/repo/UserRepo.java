@@ -13,10 +13,6 @@ import java.util.UUID;
 public interface UserRepo extends JpaRepository<Users, UUID> {
     Optional<Users> findUsersByMail(String mail);
     Optional<Users> findUsersById(UUID id);
-    @Query("SELECT u.id FROM Users u WHERE u.mail = :mail")
-    Optional<UUID> findIdByMail(@Param("mail") String mail);
+//    @Query("SELECT u.id FROM Users u WHERE u.mail = :mail")
+//    Optional<UUID> findIdByMail(@Param("mail") String mail);
 }
-
-// forget password?
-// ask user to type his mail
-// if that mail exists in the database, ask him to type the old password and new password (change the password only if the old password matches)

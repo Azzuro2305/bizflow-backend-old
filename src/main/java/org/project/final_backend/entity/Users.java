@@ -42,7 +42,7 @@ public class Users {
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private String gender;
-//    private boolean isBanned;
+    private boolean isBanned;
     private boolean isDeleted;
 
 

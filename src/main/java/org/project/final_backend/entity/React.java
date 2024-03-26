@@ -21,6 +21,7 @@ public class React {
     @OneToOne
     @JoinColumn(name = "user_id")
     private Users userId;
-//    private String type;
+    //    private String type;
     private boolean isDeleted;
+    private boolean isLiked;
 }
