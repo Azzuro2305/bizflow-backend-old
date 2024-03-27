@@ -8,6 +8,7 @@ import org.project.final_backend.domain.response.post.NewPostResponse;
 import org.project.final_backend.domain.response.post.UpdatePostResponse;
 import org.project.final_backend.dto.model.PostDto;
 import org.project.final_backend.dto.model.PostInfo;
+import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.entity.Post;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.UserNotFoundException;
@@ -18,20 +19,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @Service
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
-    private PostRepo postRepo;
-    private UserRepo userRepo;
-    private ModelMapper modelMapper;
+    private final PostRepo postRepo;
+    private final UserRepo userRepo;
+    private final ModelMapper modelMapper;
 
     @Override
     public Post findPostById(UUID id) {
@@ -106,16 +110,38 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> getAllPosts(int pageNumber, String searchKey) {
-        Pageable pageable= PageRequest.of(pageNumber,12);
+    public Map<String, Object> searchPostsAndUsers(int pageNumber, String searchKey) {
+        Specification<Post> postSpec = (root, query, cb) -> {
+            if (searchKey == null || searchKey.isEmpty()) {
+                return cb.conjunction();
+            } else {
+                return cb.like(root.get("caption"), "%" + searchKey + "%"); // filter by caption
+            }
+        };
 
-        if (searchKey .equals("")){
-            return (Page<Post>) postRepo.findAll(pageable);
-        }
-        else {
-         return (Page<Post>) postRepo.findByAccountNameContainingIgnoreCaseOrCaptionContainingIgnoreCase(
-                    searchKey,searchKey,pageable
-            );
-        }
+        Specification<Users> userSpec = (root, query, cb) -> {
+            if (searchKey == null || searchKey.isEmpty()) {
+                return cb.conjunction();
+            } else {
+                return cb.like(root.get("userName"), "%" + searchKey + "%"); // filter by userName
+            }
+        };
+
+        Page<Post> posts = postRepo.findAll(postSpec, PageRequest.of(pageNumber, 10, Sort.by("uploadTime").descending()));
+        List<PostDto> postDtos = posts.stream()
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+
+        Page<Users> users = userRepo.findAll(userSpec, PageRequest.of(pageNumber, 10, Sort.by("userName").ascending()));
+        List<UserInfo> userInfos = users.stream()
+                .map(user -> modelMapper.map(user, UserInfo.class))
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("posts", postDtos);
+        result.put("users", userInfos);
+
+        return result;
     }
+
 }

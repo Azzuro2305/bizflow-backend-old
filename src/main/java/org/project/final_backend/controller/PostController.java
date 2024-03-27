@@ -19,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -91,14 +88,30 @@ public class PostController {
 //        return postService.findPostById(postId);
 //    }
 
+//    @GetMapping("/search")
+//    public Page<Post> getALlPosts(
+//            @RequestParam int pageNumber,
+//            @RequestParam(defaultValue = "") String searchKey
+//    ) {
+//
+//        Page<Post> result = postService.getAllPosts(pageNumber, searchKey);
+//        return result;
+//    }
+
+//    @GetMapping("/search")
+//    public Page<PostDto> getAllPosts(
+//            @RequestParam(defaultValue = "0") int pageNumber,
+//            @RequestParam(defaultValue = "") String searchKey
+//    ) {
+//        return postService.searchPosts(pageNumber, searchKey);
+//    }
+
     @GetMapping("/search")
-    public Page<Post> getALlPosts(
-            @RequestParam int pageNumber,
+    public ResponseEntity<Map<String, Object>> searchPostsAndUsers(
+            @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "") String searchKey
     ) {
-
-        Page<Post> result = postService.getAllPosts(pageNumber, searchKey);
-        return result;
+        Map<String, Object> result = postService.searchPostsAndUsers(pageNumber, searchKey);
+        return ResponseEntity.ok(result);
     }
-
 }

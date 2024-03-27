@@ -1,6 +1,5 @@
 package org.project.final_backend.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comments;
@@ -16,7 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
