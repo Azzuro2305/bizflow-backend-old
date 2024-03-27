@@ -6,6 +6,7 @@ import org.project.final_backend.domain.request.workexp.NewWorkExpRequest;
 import org.project.final_backend.domain.request.workexp.UpdateWorkExpRequest;
 import org.project.final_backend.domain.response.workexp.NewWorkExpResponse;
 import org.project.final_backend.domain.response.workexp.UpdateWorkExpResponse;
+import org.project.final_backend.dto.model.EducationInfo;
 import org.project.final_backend.dto.model.WorkExpInfo;
 import org.project.final_backend.entity.WorkExp;
 import org.project.final_backend.entity.Users;
@@ -64,9 +65,17 @@ public class WorkExpServiceImpl implements WorkExpService {
         return modelMapper.map(updatedWorkExp, UpdateWorkExpResponse.class);
     }
 
+//    @Override
+//    public List<WorkExpInfo> getAllWorkExpByUserId(UUID userId) {
+//        List<WorkExpInfo> workExperiences = workExpRepo.findAllByUserId(userId);
+//        return workExperiences.stream()
+//                .map(workExperience -> modelMapper.map(workExperience, WorkExpInfo.class))
+//                .collect(Collectors.toList());
+//    }
+
     @Override
-    public List<WorkExpInfo> getAllWorkExp(UUID userId) {
-        List<WorkExpInfo> workExps = workExpRepo.findAllByUserId(userId);
+    public List<WorkExpInfo> getAllWorkExpByUserId(UUID userId) {
+        List<WorkExp> workExps = workExpRepo.findAllByUserId(userId);
         return workExps.stream()
                 .map(workExp -> modelMapper.map(workExp, WorkExpInfo.class))
                 .collect(Collectors.toList());

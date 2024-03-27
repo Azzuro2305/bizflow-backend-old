@@ -16,7 +16,9 @@ import org.project.final_backend.service.SkillService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -60,5 +62,13 @@ public class SkillServiceImpl implements SkillService {
         Skill skill = skillRepo.findSkillById(id)
                 .orElseThrow(() -> new UserNotFoundException("Skill not found"));
         skillRepo.delete(skill);
+    }
+
+    @Override
+    public List<SkillInfo> getAllSkillsByUserId(UUID userId) {
+        List<Skill> skills = skillRepo.findAllByUserId(userId);
+        return skills.stream()
+                .map(skill -> modelMapper.map(skill, SkillInfo.class))
+                .collect(Collectors.toList());
     }
 }

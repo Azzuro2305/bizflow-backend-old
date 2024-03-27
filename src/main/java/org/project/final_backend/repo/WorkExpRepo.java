@@ -12,5 +12,5 @@ import java.util.UUID;
 @Repository
 public interface WorkExpRepo extends JpaRepository<WorkExp, UUID> {
     Optional<WorkExp> findWorkExpById(UUID id);
-    List<WorkExpInfo> findAllByUserId(UUID userId);
+    List<WorkExp> findAllByUserId(UUID userId);
 }

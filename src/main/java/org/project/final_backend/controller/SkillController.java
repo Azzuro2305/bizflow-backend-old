@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,5 +46,12 @@ public class SkillController {
     public ResponseEntity<Void> deleteSkill(@PathVariable UUID id){
         skillService.deleteSkill(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all/{userId}")
+    public ResponseEntity<HttpResponse<List<SkillInfo>>> getAllSkillsByUserId(@PathVariable UUID userId){
+        HttpResponse<List<SkillInfo>> response =
+                new HttpResponse<>(skillService.getAllSkillsByUserId(userId), "Skills retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -11,8 +11,5 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.SQLServer2012Dialect
-        format_sql: true
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+      format_sql: true

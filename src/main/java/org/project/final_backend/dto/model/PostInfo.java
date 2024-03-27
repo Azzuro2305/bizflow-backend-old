@@ -14,7 +14,7 @@ public class PostInfo {
     private String accountName;
     private long followers;
     private LocalDateTime uploadTime;
-    private String profile;
+    private String profileImg;
     private String caption;
     private String uploadPhoto;
     private long like;

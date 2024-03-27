@@ -48,7 +48,7 @@ public class EducationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/all/{userId}")
     public ResponseEntity<HttpResponse<List<EducationInfo>>> getAllEducationsByUserId(@PathVariable UUID userId){
         HttpResponse<List<EducationInfo>> response =
                 new HttpResponse<>(educationService.getAllEducationsByUserId(userId), "Educations retrieved", HttpStatus.OK);
