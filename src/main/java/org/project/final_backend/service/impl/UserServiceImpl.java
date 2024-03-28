@@ -68,6 +68,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserInfo retrieveUserInfoByUserName(String userName) {
+        final Users user = userRepo
+                .findUsersByUserName(userName)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        return modelMapper.map(user, UserInfo.class);
+    }
+
+    @Override
     public VerifyMailResponse verifyMail(VerifyMailRequest request) {
         if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
             VerifyMailResponse response = new VerifyMailResponse();

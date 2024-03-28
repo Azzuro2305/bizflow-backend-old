@@ -39,6 +39,13 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/get-by-username")
+    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfoByUserName(@RequestParam String userName){
+        HttpResponse<UserInfo> response =
+                new HttpResponse<>(userService.retrieveUserInfoByUserName(userName), "User retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/verify-mail")
     public ResponseEntity<HttpResponse<VerifyMailResponse>> verifyMail(@RequestBody VerifyMailRequest request){
         HttpResponse<VerifyMailResponse> response =

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +15,6 @@ import java.util.UUID;
 public interface UserRepo extends JpaRepository<Users, UUID>, JpaSpecificationExecutor<Users> {
     Optional<Users> findUsersByMail(String mail);
     Optional<Users> findUsersById(UUID id);
+
+    Optional<Users> findUsersByUserName(String userName);
 }

@@ -23,12 +23,11 @@ public interface UserService {
     NewUserResponse registerUser(NewUserRequest request);
     NewUserResponse updateUser(UUID id, UpdateUserRequest request);
     UserInfo retrieveUserInfo(UUID id);
+    UserInfo retrieveUserInfoByUserName(String userName);
     void resetPassword(ResetPasswordRequest request);
     void resetPasswordWithUserId(UUID id, ResetPasswordUserIdRequest request);
     void resetPasswordWithOTP(UUID id, ResetPasswordOTPRequest request);
     void deleteUser(UUID id);
     Page<Users> getAllUsers(Pageable pageable);
-
-
     VerifyMailResponse verifyMail(VerifyMailRequest request);
 }
