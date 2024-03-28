@@ -25,7 +25,7 @@ public class WorkExpController {
     public ResponseEntity<HttpResponse<NewWorkExpResponse>> addWorkExp(@PathVariable UUID id, @RequestBody NewWorkExpRequest request){
         HttpResponse<NewWorkExpResponse> response =
                 new HttpResponse<>(workExpService.addWorkExp(id, request), "Work experience added", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

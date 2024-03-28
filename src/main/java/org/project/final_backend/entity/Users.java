@@ -38,6 +38,7 @@ public class Users {
     private long posts;
 
     private String role;
+    private String subscription;
     private LocalDate dob;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;

@@ -25,7 +25,7 @@ public class EducationController {
     public ResponseEntity<HttpResponse<NewEducationResponse>> addEducation(@PathVariable UUID id, @RequestBody NewEducationRequest request){
         HttpResponse<NewEducationResponse> response =
                 new HttpResponse<>(educationService.addEducation(id, request), "Education added", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
