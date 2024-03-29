@@ -83,6 +83,12 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+//    @PostMapping("")
+//    public ResponseEntity<HttpResponse<NewUserResponse>> registerUser(@RequestBody NewUserRequest request){
+//        HttpResponse<NewUserResponse> response =
+//                new HttpResponse<>(userService.registerUser(request), "Successfully registered", HttpStatus.CREATED);
+//        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//    }
     @PostMapping("")
     public ResponseEntity<HttpResponse<NewUserResponse>> registerUser(@RequestBody NewUserRequest request){
         HttpResponse<NewUserResponse> response =

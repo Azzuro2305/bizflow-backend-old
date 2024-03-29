@@ -61,7 +61,7 @@ public class PostController {
             @RequestParam(defaultValue = "uploadTime,desc") String[] sort) {
         List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
                 .map(s -> s.split(","))
-                .map(arr -> arr.length > 1 ? (arr[1].equals("desc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("uploadTime"))
+                .map(arr -> arr.length > 1 ? (arr[1].equals("asc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("uploadTime"))
                 .collect(Collectors.toList()))
                 .stream()
                 .collect(Collectors.toList());

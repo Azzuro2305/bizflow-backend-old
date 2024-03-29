@@ -3,11 +3,11 @@ package org.project.final_backend.controller;
 import lombok.AllArgsConstructor;
 import org.project.final_backend.domain.request.otp.NewOTPRequest;
 import org.project.final_backend.domain.utility.HttpResponse;
+import org.project.final_backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.project.final_backend.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")

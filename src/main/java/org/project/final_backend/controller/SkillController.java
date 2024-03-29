@@ -24,7 +24,7 @@ public class SkillController {
     @PostMapping("/{id}")
     public ResponseEntity<HttpResponse<NewSkillResponse>> addSkill(@PathVariable UUID id, @RequestBody NewSkillRequest request){
         HttpResponse<NewSkillResponse> response =
-                new HttpResponse<>(skillService.addSkill(id, request), "Skill added", HttpStatus.OK);
+                new HttpResponse<>(skillService.addSkill(id, request), "Skill added", HttpStatus.CREATED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
