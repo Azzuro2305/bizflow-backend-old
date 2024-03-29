@@ -38,7 +38,7 @@ public class FinalBackendApplication {
 		try {
 			FirebaseOptions options = new FirebaseOptions.Builder()
 					.setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//					.setDatabaseUrl("https://sh-app-338813-default-rtdb.firebaseio.com")
+					.setDatabaseUrl("https://sh-app-338813-default-rtdb.firebaseio.com")
 					.build();
 
 			if (FirebaseApp.getApps().isEmpty()) {
