@@ -22,6 +22,6 @@ public interface PostService {
     NewPostResponse createPost(NewPostRequest request);
     UpdatePostResponse updatePost(UpdatePostRequest request);
     Map<String, Object> searchPostsAndUsers(int pageNumber, String searchKey);
-    void deletePost(UUID id);
+    void deletePost(UUID userId, UUID id);
     Page<PostDto> getAllPosts(Pageable pageable);
 }

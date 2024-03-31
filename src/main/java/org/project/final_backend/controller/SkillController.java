@@ -43,9 +43,10 @@ public class SkillController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSkill(@PathVariable UUID id){
+    public ResponseEntity<HttpResponse<String>> deleteSkill(@PathVariable UUID id){
         skillService.deleteSkill(id);
-        return ResponseEntity.noContent().build();
+        HttpResponse<String> response = new HttpResponse<>("Skill deleted", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all/{userId}")

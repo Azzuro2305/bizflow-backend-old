@@ -5,10 +5,12 @@ import org.project.final_backend.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface FollowerRepo extends JpaRepository<Follower, UUID> {
     long countByUser_Id(UUID userId);
+    List<Follower> findByUser_Id(UUID userId);
     Follower findByUserAndFollower(Users user, Users follower);
 }

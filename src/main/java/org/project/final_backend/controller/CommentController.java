@@ -40,8 +40,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<NewCommentResponse> deleteComment(@PathVariable UUID id){
+    public ResponseEntity<HttpResponse<String>> deleteComment(@PathVariable UUID id){
         commentService.deleteComment(id);
-        return ResponseEntity.noContent().build();
+        HttpResponse<String> response = new HttpResponse<>("Comment deleted", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

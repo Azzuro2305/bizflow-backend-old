@@ -43,9 +43,10 @@ public class EducationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEducation(@PathVariable UUID id){
+    public ResponseEntity<HttpResponse<String>> deleteEducation(@PathVariable UUID id){
         educationService.deleteEducation(id);
-        return ResponseEntity.noContent().build();
+        HttpResponse<String> response = new HttpResponse<>("Education deleted", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all/{userId}")

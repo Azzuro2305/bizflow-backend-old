@@ -72,9 +72,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id){
+    public ResponseEntity<HttpResponse<String>> deleteUser(@PathVariable UUID id){
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        HttpResponse<String> response = new HttpResponse<>("User deleted", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

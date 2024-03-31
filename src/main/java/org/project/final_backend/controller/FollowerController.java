@@ -7,10 +7,7 @@ import org.project.final_backend.domain.following.NewFollowingRequest;
 import org.project.final_backend.service.FollowerService;
 import org.project.final_backend.service.FollowingService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -20,6 +17,8 @@ import java.util.UUID;
 public class FollowerController {
     private final FollowerService followerService;
     private final FollowingService followingService;
+
+
 
     @PostMapping
     public ResponseEntity<Void> addFollower(@RequestBody NewFollowerRequest request){
@@ -39,5 +38,8 @@ public class FollowerController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> findFollowers(@PathVariable UUID userId){
+        return ResponseEntity.ok(followerService.findFollowersByUserId(userId));
+    }
 }

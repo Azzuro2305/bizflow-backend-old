@@ -43,9 +43,10 @@ public class WorkExpController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWorkExp(@PathVariable UUID id){
+    public ResponseEntity<HttpResponse<String>> deleteWorkExp(@PathVariable UUID id){
         workExpService.deleteWorkExp(id);
-        return ResponseEntity.noContent().build();
+        HttpResponse<String> response = new HttpResponse<>("Work experience deleted", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all/{userId}")

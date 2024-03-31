@@ -65,7 +65,11 @@ public class PostServiceImpl implements PostService {
                  .uploadPhoto(request.getUploadPhoto())
                  .profileImg(user.getProfileImg())
                  .build();
-            return modelMapper.map(postRepo.save(post),NewPostResponse.class);
+         postRepo.save(post);
+         long postCount = postRepo.countByUsers_Id(request.getUserId());
+         user.setPosts(postCount);
+         userRepo.save(user);
+         return modelMapper.map(postRepo.save(post),NewPostResponse.class);
     }
 
     @Override
@@ -78,9 +82,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(UUID postId) {
+    public void deletePost(UUID userId, UUID postId) {
         final Post post = postRepo.findPostById(postId).orElseThrow(()->new UserNotFoundException("Post not found "));
+        final Users user = userRepo.findUsersById(userId).orElseThrow(()->new UserNotFoundException("User not found"));
         postRepo.delete(post);
+        user.setPosts(user.getPosts()-1);
+        userRepo.save(user);
+
     }
 //    @Bean
 //    public ModelMapper modelMapper() {

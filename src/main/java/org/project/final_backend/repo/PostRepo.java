@@ -17,6 +17,7 @@ public interface PostRepo extends JpaRepository<Post, UUID>, JpaSpecificationExe
     Optional<Post> findPostById(UUID id);
     List<Post> findPostsByUsers_Id(UUID userId);
     Page<Post> findAll(Pageable pageable);
+    long countByUsers_Id(UUID userId);
 
     Page<Post> findByAccountNameContainingIgnoreCaseOrCaptionContainingIgnoreCase(
             String key1,

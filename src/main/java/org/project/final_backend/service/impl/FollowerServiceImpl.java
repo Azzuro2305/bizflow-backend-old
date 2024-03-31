@@ -10,6 +10,7 @@ import org.project.final_backend.service.FollowerService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,8 +24,15 @@ public class FollowerServiceImpl implements FollowerService {
         return followerRepo.countByUser_Id(userId);
     }
 
-@Override
-public void addFollower(NewFollowerRequest request) {
+    @Override
+    public List<UUID> findFollowersByUserId(UUID userId) {
+        return followerRepo.findByUser_Id(userId).stream()
+                .map(follower -> follower.getFollower().getId())
+                .toList();
+    }
+
+    @Override
+    public void addFollower(NewFollowerRequest request) {
     UUID userId = request.getUserId();
     UUID followerId = request.getFollowerId();
 

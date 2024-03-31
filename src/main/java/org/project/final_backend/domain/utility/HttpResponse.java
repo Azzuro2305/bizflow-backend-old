@@ -22,4 +22,11 @@ public class HttpResponse<T> {
         this.httpStatus = httpStatus;
         this.date = LocalDateTime.now();
     }
+
+    public HttpResponse(String message, HttpStatus httpStatus){
+        this.message = message;
+        this.httpStatusCode = httpStatus.value();
+        this.httpStatus = httpStatus;
+        this.date = LocalDateTime.now();
+    }
 }
