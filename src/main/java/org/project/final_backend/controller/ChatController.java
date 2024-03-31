@@ -1,6 +1,7 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
+import org.project.final_backend.domain.request.chat.NewMessageRequest;
 import org.project.final_backend.domain.utility.HttpResponse;
 import org.project.final_backend.entity.ChatMessage;
 import org.project.final_backend.service.ChatService;
@@ -27,11 +28,14 @@ public class ChatController {
 
 //    @MessageMapping("/sendMessage")
 //    @SendTo("/topic/public")
-    @PostMapping("/send-message")
-    public ResponseEntity<HttpResponse<ChatMessage>> sendMessage(@RequestBody ChatMessage chatMessage) {
-        chatService.createMessage(chatMessage.getChatId(), chatMessage.getSenderId(), chatMessage.getRecipientId(), chatMessage.getContent());
+//    public ChatMessage sendMessage(@Payload NewMessageRequest request) {
+//        chatService.sendMessage(request);
+//        return new ChatMessage(request.getChatId(), request.getSenderId(), request.getRecipientId(), request.getContent());
+//    }
 
-        HttpResponse<ChatMessage> response = new HttpResponse<>(chatMessage, "Message sent successfully", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @PostMapping("/send-message")
+    public ResponseEntity<HttpResponse> sendMessage(@RequestBody NewMessageRequest request) {
+        chatService.sendMessage(request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

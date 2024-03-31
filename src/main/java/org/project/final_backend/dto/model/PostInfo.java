@@ -10,6 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class PostInfo {
+    private UUID userId;
     private UUID id;
     private String accountName;
     private long followers;

@@ -10,7 +10,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class PostDto {
-    private UUID postId;
+//    private UUID postId;
+    private UUID id;
     private UUID userId;
     private String accountName;
     private String uploadPhoto;

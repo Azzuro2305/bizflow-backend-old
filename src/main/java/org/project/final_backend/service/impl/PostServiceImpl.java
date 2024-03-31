@@ -99,7 +99,7 @@ public class PostServiceImpl implements PostService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.typeMap(Post.class, PostDto.class).addMappings(mapper -> {
             mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
-            mapper.map(Post::getId, PostDto::setPostId);
+            mapper.map(Post::getId, PostDto::setId);
         });
         return modelMapper;
     }

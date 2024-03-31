@@ -1,5 +1,8 @@
 package org.project.final_backend.service;
 
+import org.project.final_backend.domain.request.chat.NewMessageRequest;
+
 public interface ChatService {
-    void createMessage(String chatId, String senderId, String recipientId, String message);
+    void sendMessage(NewMessageRequest request);
+
 }

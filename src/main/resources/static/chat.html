@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script>
+        var ws;
+
+        function connect() {
+            var host = document.getElementById("host").value;
+
+            ws = new WebSocket(host);
+
+            ws.onopen = function() {
+                console.log("Connected to " + host);
+                ws.send(JSON.stringify({
+                    type: 'CONNECT',
+                    content: document.getElementById("username").value,
+                    sender: document.getElementById("username").value
+                }));
+            }
+
+            ws.onmessage = function(event) {
+                var message = JSON.parse(event.data);
+                console.log("Received: " + message.content);
+            }
+
+            ws.onerror = function(event) {
+                console.log("Error: " + event);
+            }
+        }
+
+        function send() {
+            var content = document.getElementById("content").value;
+            var json = JSON.stringify({
+                "type": 'CHAT',
+                "content": content,
+                "sender": document.getElementById("username").value
+            });
+
+            ws.send(json);
+        }
+    </script>
+</head>
+<body>
+<div>
+    <label for="host">Server: </label>
+    <input type="text" id="host" value="ws://localhost:8080"/>
+</div>
+<div>
+    <label for="username">Username: </label>
+    <input type="text" id="username"/>
+</div>
+<div>
+    <button onclick="connect()">Connect</button>
+</div>
+<div>
+    <label for="content">Message: </label>
+    <input type="text" id="content"/>
+</div>
+<div>
+    <button onclick="send()">Send</button>
+</div>
+</body>
+</html>

@@ -58,6 +58,7 @@ public class WorkExpServiceImpl implements WorkExpService {
                 .orElseThrow(() -> new UserNotFoundException("Work experience not found"));
         workExp.setCompanyName(request.getCompanyName() != null ? request.getCompanyName() : workExp.getCompanyName());
         workExp.setPosition(request.getPosition() != null ? request.getPosition() : workExp.getPosition());
+        workExp.setType(request.getType() != null ? request.getType() : workExp.getType());
         workExp.setStartDate(request.getStartDate() != null ? request.getStartDate() : workExp.getStartDate());
         workExp.setEndDate(request.getEndDate() != null ? request.getEndDate() : workExp.getEndDate());
         workExp.setUpdatedDate(LocalDateTime.now());

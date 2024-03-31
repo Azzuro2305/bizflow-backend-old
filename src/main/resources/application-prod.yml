@@ -13,3 +13,8 @@ spring:
       ddl-auto: update
       dialect: org.hibernate.dialect.SQLServer2012Dialect
       format_sql: true
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: '*'
