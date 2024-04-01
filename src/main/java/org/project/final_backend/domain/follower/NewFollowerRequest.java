@@ -8,6 +8,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class NewFollowerRequest {
-    private UUID userId;
+    private UUID followingId;
     private UUID followerId;
 }

@@ -1,4 +1,4 @@
-package org.project.final_backend.domain.response.follow;
+package org.project.final_backend.domain.response.follower;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -172,13 +172,13 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(updatedUser, NewUserResponse.class);
     }
 
-    public void updateFollowersCount(UUID userId) {
-        final Users user = userRepo.findUsersById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found!"));
-        long followersCount = followerRepo.countByUser_Id(userId);
-        user.setFollowers(followersCount);
-        userRepo.save(user);
-    }
+//    public void updateFollowersCount(UUID userId) {
+//        final Users user = userRepo.findUsersById(userId)
+//                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+//        long followersCount = followerRepo.countByUser_Id(userId);
+//        user.setFollowers(followersCount);
+//        userRepo.save(user);
+//    }
 
     public Page<Users> getAllUsers(Pageable pageable) {
         return userRepo.findAll(pageable);
