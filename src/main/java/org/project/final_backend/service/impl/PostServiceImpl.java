@@ -111,9 +111,11 @@ public class PostServiceImpl implements PostService {
         });
         return modelMapper;
     }
+
     @Override
     public Page<PostDto> getAllPosts(Pageable pageable) {
-        Page<Post> posts = postRepo.findAll(pageable);
+        Pageable sortedByUploadTimeDesc = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("uploadTime").descending());
+        Page<Post> posts = postRepo.findAll(sortedByUploadTimeDesc);
         return posts.map(post -> customModelMapper().map(post, PostDto.class));
     }
 
