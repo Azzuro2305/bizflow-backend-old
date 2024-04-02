@@ -48,8 +48,19 @@ public class PostServiceImpl implements PostService {
     public PostInfo retrievePostInfo(UUID id) {
         final Post post=postRepo.findPostById(id)
                 .orElseThrow(()->new UserNotFoundException("Post not found "));
-
-        return modelMapper.map(post, PostInfo.class);
+        final PostInfo postInfo = PostInfo.builder()
+                .userId(post.getUsers().getId())
+                .id(post.getId())
+                .accountName(post.getAccountName())
+                .followers(post.getFollowers())
+                .uploadTime(post.getUploadTime())
+                .profileImg(post.getProfileImg())
+                .caption(post.getCaption())
+                .uploadPhoto(post.getUploadPhoto())
+                .like(post.getReact())
+                .comment(post.getComment())
+                .build();
+        return modelMapper.map(postInfo, PostInfo.class);
     }
 
     @Override
@@ -88,7 +99,6 @@ public class PostServiceImpl implements PostService {
         postRepo.delete(post);
         user.setPosts(user.getPosts()-1);
         userRepo.save(user);
-
     }
 //    @Bean
 //    public ModelMapper modelMapper() {
@@ -102,6 +112,16 @@ public class PostServiceImpl implements PostService {
         return postRepo.findPostsByUsers_Id(userId);
     }
 
+//    @Bean
+//    public ModelMapper customModelMapper() {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.typeMap(Post.class, PostDto.class).addMappings(mapper -> {
+//            mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
+//            mapper.map(Post::getId, PostDto::setId);
+//        });
+//        return modelMapper;
+//    }
+
     @Bean
     public ModelMapper customModelMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -109,8 +129,24 @@ public class PostServiceImpl implements PostService {
             mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
             mapper.map(Post::getId, PostDto::setId);
         });
+        modelMapper.typeMap(Post.class, PostInfo.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUsers().getId(), PostInfo::setUserId);
+        });
         return modelMapper;
     }
+
+//    @Bean
+//    public ModelMapper customModelMapper() {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.typeMap(Post.class, PostDto.class).addMappings(mapper -> {
+//            mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
+//            mapper.map(Post::getId, PostDto::setId);
+//        });
+//        modelMapper.typeMap(Post.class, PostInfo.class).addMappings(mapper -> {
+//            mapper.map(src -> src.getUsers().getId(), PostInfo::setUserId);
+//        });
+//        return modelMapper;
+//    }
 
     @Override
     public Page<PostDto> getAllPosts(Pageable pageable) {
@@ -139,12 +175,12 @@ public class PostServiceImpl implements PostService {
 
         Page<Post> posts = postRepo.findAll(postSpec, PageRequest.of(pageNumber, 10, Sort.by("uploadTime").descending()));
         List<PostDto> postDtos = posts.stream()
-                .map(post -> modelMapper.map(post, PostDto.class))
+                .map(post -> customModelMapper().map(post, PostDto.class))
                 .collect(Collectors.toList());
 
         Page<Users> users = userRepo.findAll(userSpec, PageRequest.of(pageNumber, 10, Sort.by("userName").ascending()));
         List<UserInfo> userInfos = users.stream()
-                .map(user -> modelMapper.map(user, UserInfo.class))
+                .map(user -> customModelMapper().map(user, UserInfo.class))
                 .collect(Collectors.toList());
 
         Map<String, Object> result = new HashMap<>();

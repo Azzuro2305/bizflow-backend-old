@@ -11,6 +11,8 @@ import org.project.final_backend.dto.model.PostDto;
 import org.project.final_backend.dto.model.PostInfo;
 import org.project.final_backend.entity.Post;
 import org.project.final_backend.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -48,8 +50,8 @@ public class PostController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable UUID userId, UUID postId) {
+    @DeleteMapping()
+    public ResponseEntity<Void> deletePost(@RequestParam UUID userId, UUID postId) {
         postService.deletePost(userId, postId);
         return ResponseEntity.noContent().build();
     }
@@ -74,11 +76,25 @@ public class PostController {
 //        return ResponseEntity.ok(postService.findPostsByUsersId(userId));
 //    }
 
+    @Bean
+    public ModelMapper customModelMapper1() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(Post.class, PostDto.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
+            mapper.map(Post::getId, PostDto::setId);
+        });
+        modelMapper.typeMap(Post.class, PostInfo.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUsers().getId(), PostInfo::setUserId);
+        });
+        return modelMapper;
+    }
+
+
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostInfo>> getPostsByUserId(@PathVariable UUID userId) {
         List<Post> posts = postService.findPostsByUsersId(userId);
         List<PostInfo> postInfos = posts.stream()
-                .map(post -> modelMapper.map(post, PostInfo.class))
+                .map(post -> customModelMapper1().map(post, PostInfo.class))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(postInfos);
     }
