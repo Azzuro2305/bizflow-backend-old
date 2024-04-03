@@ -36,6 +36,7 @@ public class Users {
     private long followings;
     private long friends;
     private long posts;
+    private long jobPosts;
 
     private String role;
     private String subscription;

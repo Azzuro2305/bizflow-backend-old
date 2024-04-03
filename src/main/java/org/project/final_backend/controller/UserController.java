@@ -74,8 +74,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}/reset-password-otp")
-    public ResponseEntity<Void> resetPasswordWithOTP(@PathVariable UUID id, @RequestBody ResetPasswordOTPRequest request){
-        userService.resetPasswordWithOTP(id, request);
+    public ResponseEntity<Void> resetPasswordWithOTP(@RequestBody ResetPasswordOTPRequest request){
+        userService.resetPasswordWithOTP(request);
         return ResponseEntity.noContent().build();
     }
 

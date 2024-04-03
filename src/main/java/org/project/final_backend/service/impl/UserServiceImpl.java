@@ -123,8 +123,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPasswordWithOTP(UUID id, ResetPasswordOTPRequest request) {
-        final Users user = userRepo.findUsersById(id)
+    public void resetPasswordWithOTP(ResetPasswordOTPRequest request) {
+        final Users user = userRepo.findUsersByMail(request.getMail())
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
         if (!authService.validateOTP(request)) {
             throw new InvalidPasswordException("Invalid OTP!");
