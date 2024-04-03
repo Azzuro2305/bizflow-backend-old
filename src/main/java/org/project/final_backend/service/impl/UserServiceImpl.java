@@ -11,6 +11,7 @@ import org.project.final_backend.domain.request.user.UpdateUserRequest;
 import org.project.final_backend.domain.request.user.ValidateUserRequest;
 import org.project.final_backend.domain.response.VerifyMailResponse;
 import org.project.final_backend.domain.response.user.NewUserResponse;
+import org.project.final_backend.domain.subscribe.Subscribe;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.InvalidPasswordException;
@@ -73,6 +74,15 @@ public class UserServiceImpl implements UserService {
                 .findUsersByUserName(userName)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
         return modelMapper.map(user, UserInfo.class);
+    }
+
+    @Override
+    public void purchase(Subscribe subscribe) {
+        final Users user = userRepo
+                .findUsersById(subscribe.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        user.setRole(subscribe.getSubscriptionType());
+        userRepo.save(user);
     }
 
     @Override
@@ -147,7 +157,7 @@ public class UserServiceImpl implements UserService {
                     .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .createdDate(LocalDateTime.now())
-                    .role("USER")
+                    .role("FREE_USER")
                     .build();
             return modelMapper.map(userRepo.save(user), NewUserResponse.class);
         }

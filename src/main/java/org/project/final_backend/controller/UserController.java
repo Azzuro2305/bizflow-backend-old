@@ -9,6 +9,7 @@ import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
 import org.project.final_backend.domain.request.user.ValidateUserRequest;
 import org.project.final_backend.domain.response.VerifyMailResponse;
+import org.project.final_backend.domain.subscribe.Subscribe;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
@@ -36,6 +37,13 @@ public class UserController {
     public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfo(@RequestParam UUID id){
         HttpResponse<UserInfo> response =
                 new HttpResponse<>(userService.retrieveUserInfo(id), "User retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/subscribe")
+    public ResponseEntity<HttpResponse<Void>> purchase(@RequestBody Subscribe subscribe){
+        userService.purchase(subscribe);
+        HttpResponse<Void> response = new HttpResponse<>(null, "Subscription successful", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
