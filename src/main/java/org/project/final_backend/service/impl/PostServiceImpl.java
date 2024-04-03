@@ -6,12 +6,15 @@ import org.project.final_backend.domain.request.post.NewPostRequest;
 import org.project.final_backend.domain.request.post.UpdatePostRequest;
 import org.project.final_backend.domain.response.post.NewPostResponse;
 import org.project.final_backend.domain.response.post.UpdatePostResponse;
+import org.project.final_backend.dto.model.JobPostDto;
 import org.project.final_backend.dto.model.PostDto;
 import org.project.final_backend.dto.model.PostInfo;
 import org.project.final_backend.dto.model.UserInfo;
+import org.project.final_backend.entity.JobPost;
 import org.project.final_backend.entity.Post;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.UserNotFoundException;
+import org.project.final_backend.repo.JobPostRepo;
 import org.project.final_backend.repo.PostRepo;
 import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.PostService;
@@ -35,6 +38,7 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
     private final PostRepo postRepo;
     private final UserRepo userRepo;
+    private final JobPostRepo jobPostRepo;
     private final ModelMapper modelMapper;
 
     @Override
@@ -135,6 +139,19 @@ public class PostServiceImpl implements PostService {
         return modelMapper;
     }
 
+    @Bean
+    public ModelMapper jobPostCustomModelMapper2() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(JobPost.class, JobPostDto.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUsers().getId(), JobPostDto::setUserId);
+            mapper.map(src -> src.getUsers().getProfileImg(), JobPostDto::setProfileImg);
+            mapper.map(src -> src.getUsers().getUserName(), JobPostDto::setUserName);
+            mapper.map(JobPost::getId, JobPostDto::setId);
+        });
+        // Add more mappings if you have other DTOs
+        return modelMapper;
+    }
+
 //    @Bean
 //    public ModelMapper customModelMapper() {
 //        ModelMapper modelMapper = new ModelMapper();
@@ -148,10 +165,24 @@ public class PostServiceImpl implements PostService {
 //        return modelMapper;
 //    }
 
+//    @Override
+//    public Page<PostDto> getAllPosts(Pageable pageable) {
+//        Pageable sortedByUploadTimeDesc = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("uploadTime").descending());
+//        Page<Post> posts = postRepo.findAll(sortedByUploadTimeDesc);
+//        return posts.map(post -> customModelMapper().map(post, PostDto.class));
+//    }
+
     @Override
-    public Page<PostDto> getAllPosts(Pageable pageable) {
-        Pageable sortedByUploadTimeDesc = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("uploadTime").descending());
-        Page<Post> posts = postRepo.findAll(sortedByUploadTimeDesc);
+    public Page<PostDto> getAllPosts(Pageable pageable, String[] sort) {
+        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
+                .map(s -> s.split(","))
+                .map(arr -> arr.length > 1 ? (arr[1].equals("asc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("uploadTime"))
+                .collect(Collectors.toList()))
+                .stream()
+                .collect(Collectors.toList());
+        Sort sorting = Sort.by(orders);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
+        Page<Post> posts = postRepo.findAll(sortedPageable);
         return posts.map(post -> customModelMapper().map(post, PostDto.class));
     }
 
@@ -173,6 +204,14 @@ public class PostServiceImpl implements PostService {
             }
         };
 
+        Specification<JobPost> jobPostSpec = (root, query, cb) -> {
+            if (searchKey == null || searchKey.isEmpty()) {
+                return cb.conjunction();
+            } else {
+                return cb.like(root.get("title"), "%" + searchKey + "%"); // filter by title
+            }
+        };
+
         Page<Post> posts = postRepo.findAll(postSpec, PageRequest.of(pageNumber, 10, Sort.by("uploadTime").descending()));
         List<PostDto> postDtos = posts.stream()
                 .map(post -> customModelMapper().map(post, PostDto.class))
@@ -183,9 +222,15 @@ public class PostServiceImpl implements PostService {
                 .map(user -> customModelMapper().map(user, UserInfo.class))
                 .collect(Collectors.toList());
 
+        Page<JobPost> jobPosts = jobPostRepo.findAll(jobPostSpec, PageRequest.of(pageNumber, 10, Sort.by("updateTime").descending()));
+        List<JobPostDto> jobPostDtos = jobPosts.stream()
+                .map(jobPost -> jobPostCustomModelMapper2().map(jobPost, JobPostDto.class))
+                .collect(Collectors.toList());
+
         Map<String, Object> result = new HashMap<>();
         result.put("posts", postDtos);
         result.put("users", userInfos);
+        result.put("jobPosts", jobPostDtos);
 
         return result;
     }

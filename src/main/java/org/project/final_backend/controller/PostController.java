@@ -34,7 +34,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<HttpResponse<NewPostResponse>> createPost(@RequestBody NewPostRequest request) {
-        HttpResponse<NewPostResponse> response = new HttpResponse<>(postService.createPost(request), "Successfully upload", HttpStatus.CREATED);
+        HttpResponse<NewPostResponse> response = new HttpResponse<>(postService.createPost(request), "Successfully created", HttpStatus.CREATED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -51,24 +51,17 @@ public class PostController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> deletePost(@RequestParam UUID userId, UUID postId) {
+    public ResponseEntity<HttpResponse<String>> deletePost(@RequestParam UUID userId, UUID postId) {
         postService.deletePost(userId, postId);
-        return ResponseEntity.noContent().build();
+        HttpResponse<String> response = new HttpResponse<>("Successfully deleted", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @GetMapping("/posts")
     public Page<PostDto> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "uploadTime,desc") String[] sort) {
-        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
-                .map(s -> s.split(","))
-                .map(arr -> arr.length > 1 ? (arr[1].equals("asc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("uploadTime"))
-                .collect(Collectors.toList()))
-                .stream()
-                .collect(Collectors.toList());
-        Sort sorting = Sort.by(orders);
-        return postService.getAllPosts(PageRequest.of(page, size, sorting));
+        return postService.getAllPosts(PageRequest.of(page, size), sort);
     }
 
 //    @GetMapping("/posts/{userId}")

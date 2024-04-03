@@ -1,6 +1,6 @@
 package org.project.final_backend.repo;
 
-import org.project.final_backend.dto.model.PostDto;
+import org.project.final_backend.entity.JobPost;
 import org.project.final_backend.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,15 +13,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PostRepo extends JpaRepository<Post, UUID>, JpaSpecificationExecutor<Post> {
-    Optional<Post> findPostById(UUID id);
-    List<Post> findPostsByUsers_Id(UUID userId);
-    Page<Post> findAll(Pageable pageable);
+public interface JobPostRepo extends JpaRepository<JobPost, UUID>, JpaSpecificationExecutor<JobPost> {
+    Optional<JobPost> findJobPostById(UUID id);
+    List<JobPost> findJobPostsByUsers_Id(UUID userId);
+    Page<JobPost> findAll(Pageable pageable);
     long countByUsers_Id(UUID userId);
-
-    Page<Post> findByAccountNameContainingIgnoreCaseOrCaptionContainingIgnoreCase(
-            String key1,
-            String key2,
-            Pageable pageable
-    );
 }

@@ -28,7 +28,7 @@ public interface UserService {
     void purchase(Subscribe subscribe);
     void resetPassword(ResetPasswordRequest request);
     void resetPasswordWithUserId(UUID id, ResetPasswordUserIdRequest request);
-    void resetPasswordWithOTP(UUID id, ResetPasswordOTPRequest request);
+    void resetPasswordWithOTP(ResetPasswordOTPRequest request);
     void deleteUser(UUID id);
     Page<Users> getAllUsers(Pageable pageable);
     VerifyMailResponse verifyMail(VerifyMailRequest request);
