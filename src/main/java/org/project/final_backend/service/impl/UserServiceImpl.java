@@ -177,6 +177,7 @@ public class UserServiceImpl implements UserService {
         user.setProfileImg(request.getProfileImg() != null ? request.getProfileImg() : user.getProfileImg());
         user.setDob(request.getDob() != null ? request.getDob() : user.getDob());
         user.setGender(request.getGender() != null ? request.getGender() : user.getGender());
+        user.setBio(request.getBio() != null ? request.getBio() : user.getBio());
         user.setUpdatedDate(LocalDateTime.now());
         Users updatedUser = userRepo.save(user);
         return modelMapper.map(updatedUser, NewUserResponse.class);

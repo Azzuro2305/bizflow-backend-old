@@ -24,5 +24,6 @@ public class NewUserResponse {
     private LocalDate dob;
     private LocalDateTime createdDate;
     private String gender;
+    private String bio;
     private boolean isDeleted;
 }
