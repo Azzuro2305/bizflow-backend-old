@@ -46,7 +46,7 @@ public class JobPostServiceImpl implements JobPostService {
     public JobPostInfo retrieveJobPostInfo(UUID id) {
         JobPost jobPost = jobPostRepo.findJobPostById(id)
                 .orElseThrow(() -> new UserNotFoundException("Job post not found"));
-        return modelMapper.map(jobPost, JobPostInfo.class);
+        return jobPostCustomModelMapper3().map(jobPost, JobPostInfo.class);
     }
 
 
@@ -112,6 +112,27 @@ public class JobPostServiceImpl implements JobPostService {
             mapper.map(src -> src.getUsers().getProfileImg(), JobPostDto::setProfileImg);
             mapper.map(src -> src.getUsers().getUserName(), JobPostDto::setUserName);
             mapper.map(JobPost::getId, JobPostDto::setId);
+        });
+        // Add more mappings if you have other DTOs
+        return modelMapper;
+    }
+
+    @Bean
+    public ModelMapper jobPostCustomModelMapper3() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(JobPost.class, JobPostDto.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUsers().getId(), JobPostDto::setUserId);
+            mapper.map(src -> src.getUsers().getProfileImg(), JobPostDto::setProfileImg);
+            mapper.map(src -> src.getUsers().getUserName(), JobPostDto::setUserName);
+            mapper.map(JobPost::getId, JobPostDto::setId);
+        });
+        modelMapper.typeMap(JobPost.class, JobPostInfo.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUsers().getId(), JobPostInfo::setUserId);
+            mapper.map(src -> src.getUsers().getProfileImg(), JobPostInfo::setProfileImg);
+            mapper.map(src -> src.getUsers().getUserName(), JobPostInfo::setUserName);
+            mapper.map(src -> src.getUsers().getFollowers(), JobPostInfo::setFollowers);
+            mapper.map(JobPost::getId, JobPostInfo::setId);
+            // Add mappings for other properties as needed
         });
         // Add more mappings if you have other DTOs
         return modelMapper;
