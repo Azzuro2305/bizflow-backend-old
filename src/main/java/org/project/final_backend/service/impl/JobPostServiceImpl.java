@@ -49,7 +49,6 @@ public class JobPostServiceImpl implements JobPostService {
         return jobPostCustomModelMapper3().map(jobPost, JobPostInfo.class);
     }
 
-
     @Override
     public NewJobPostResponse createJobPost(NewJobPostRequest request) {
         Users user = userRepo.findUsersById(request.getUserId())
@@ -132,9 +131,7 @@ public class JobPostServiceImpl implements JobPostService {
             mapper.map(src -> src.getUsers().getUserName(), JobPostInfo::setUserName);
             mapper.map(src -> src.getUsers().getFollowers(), JobPostInfo::setFollowers);
             mapper.map(JobPost::getId, JobPostInfo::setId);
-            // Add mappings for other properties as needed
         });
-        // Add more mappings if you have other DTOs
         return modelMapper;
     }
 

@@ -9,15 +9,9 @@ import org.project.final_backend.entity.Comment;
 import java.util.UUID;
 
 public interface CommentService {
-
     Comment findCommentById(UUID Id);
-
     NewCommentResponse createComment(UUID user_id, UUID post_id, NewCommentRequest request);
-
     NewCommentResponse updateComment(UUID id,NewCommentRequest request);
-
     CommentInfo retrieveCommentInfo(UUID id);
-
     void deleteComment(UUID id);
-
 }

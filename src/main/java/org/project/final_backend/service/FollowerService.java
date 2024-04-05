@@ -7,11 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FollowerService {
-//    long countByUser_Id(UUID userId);
-//    List<UUID> findFollowersByUserId(UUID userId);
-//    void updateFollowerCount(UUID userId);
-//    void addFollower(NewFollowerRequest request);
-
     NewFollowerResponse addFollower(NewFollowerRequest request);
     boolean hasFollowedBack(UUID followingId, UUID followerId);
     List<UUID> findFollowersByUserId(UUID userId);

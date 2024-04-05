@@ -18,20 +18,6 @@ import java.time.chrono.IsoChronology;
 @SpringBootApplication
 @EnableCaching
 public class FinalBackendApplication {
-
-//	public static void main(String[] args) throws IOException {
-//		CRUDLoader crudLoader = new CRUDLoader();
-//		File file = new File("serviceAccountKey.json");
-//		FileInputStream serviceAccount = new FileInputStream(file.getAbsolutePath());
-//		FirebaseOptions options = new FirebaseOptions.Builder()
-//				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//				.setDatabaseUrl("https://sh-app-338813-default-rtdb.firebaseio.com")
-//				.build();
-//		FirebaseApp.initializeApp(options);
-//
-//		SpringApplication.run(FinalBackendApplication.class, args);
-//	}
-
 	public static void main(String[] args) {
 		CRUDLoader crudLoader = new CRUDLoader();
 		InputStream serviceAccount = crudLoader.getResourceAsStream("serviceAccountKey.json");
@@ -56,19 +42,4 @@ public class FinalBackendApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-
-//	@PostConstruct
-//	public void init() {
-//		try {
-//			FirebaseOptions options = new FirebaseOptions.Builder()
-//					.setCredentials(GoogleCredentials.fromStream(new ClassPathResource("config/sh-app-338813-7b0205b127e6.json").getInputStream()))
-//					.build();
-//
-//			if (FirebaseApp.getApps().isEmpty()) {
-//				FirebaseApp.initializeApp(options);
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 }

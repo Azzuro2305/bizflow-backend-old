@@ -30,9 +30,6 @@ public class Post {
     private LocalDateTime uploadTime;
     private LocalDateTime updateTime;
     private boolean isDeleted;
-//    @OneToMany
-//    @JoinColumn(name = "user_id")
-//    private Comments comments;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users users;

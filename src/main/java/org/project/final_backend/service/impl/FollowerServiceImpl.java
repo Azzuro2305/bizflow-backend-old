@@ -49,22 +49,13 @@ public class FollowerServiceImpl implements FollowerService {
 
             following.setFollowings(following.getFollowings() + 1);
             follower.setFollowers(follower.getFollowers() + 1);
-
-//            following.setFollowings(followerRepo.countByFollower(following));
-//            follower.setFollowers(followerRepo.countByFollowing(follower));
-//            userRepo.save(following);
-//            userRepo.save(follower);
-
             NewFollowerResponse response = new NewFollowerResponse();
             response.setFollowerId(followerId);
             response.setFollowingId(followingId);
             response.setFollowedAt(newFollower.getFollowedAt());
-
             return response;
         }
     }
-
-
 
     @Override
     public boolean hasFollowedBack(UUID followingId, UUID followerId) {
@@ -134,52 +125,4 @@ public class FollowerServiceImpl implements FollowerService {
             throw new RuntimeException("No such follower relationship exists");
         }
     }
-
-//    @Override
-//    public long countByUser_Id(UUID userId) {
-//        return followerRepo.countByUser_Id(userId);
-//    }
-//
-//    @Override
-//    public List<UUID> findFollowersByUserId(UUID userId) {
-//        return followerRepo.findByUser_Id(userId).stream()
-//                .map(follower -> follower.getFollower().getId())
-//                .toList();
-//    }
-//
-//    @Override
-//    public void addFollower(NewFollowerRequest request) {
-//    UUID userId = request.getUserId();
-//    UUID followerId = request.getFollowerId();
-//
-//    Users user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-//    Users follower = userRepo.findById(followerId).orElseThrow(() -> new RuntimeException("Follower not found"));
-//
-//    if (userId.equals(followerId)) {
-//        throw new RuntimeException("A user cannot follow themselves");
-//    }
-//
-//    Follower existingFollower = followerRepo.findByUserAndFollower(user, follower);
-//    if (existingFollower != null && !existingFollower.isDeleted()) {
-//        throw new RuntimeException("The user is already following");
-//
-//    } else {
-//        Follower newFollower = Follower.builder()
-//                .user(user)
-//                .follower(follower)
-//                .followedAt(LocalDateTime.now())
-//                .isDeleted(false)
-//                .build();
-//
-//        followerRepo.save(newFollower);
-//    }
-//}
-
-//    @Override
-//    public void updateFollowerCount(UUID userId) {
-//        Users user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-//        long followerCount = followerRepo.countByUser_Id(userId);
-//        user.setFollowers(followerCount);
-//        userRepo.save(user);
-//    }
 }

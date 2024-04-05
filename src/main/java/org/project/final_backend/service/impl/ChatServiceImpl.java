@@ -141,22 +141,10 @@ public class ChatServiceImpl implements ChatService {
                     DocumentReference docRef = db.collection(collectionName1).document();
                     ChatMessage message = new ChatMessage(request.getSenderId(), request.getRecipientId(), request.getContent());
                     ApiFuture<WriteResult> result = docRef.set(message);
-
-//                    NewChatBoxRequest newChatBoxRequest = NewChatBoxRequest.builder()
-//                            .senderId(UUID.fromString(request.getSenderId()))
-//                            .recipientId(UUID.fromString(request.getRecipientId()))
-//                            .build();
-//                    chatBoxService.createNewChatBox(newChatBoxRequest); // Changed this line
                 } else if (!documents2.isEmpty()) {
                     DocumentReference docRef = db.collection(collectionName2).document();
                     ChatMessage message = new ChatMessage(request.getSenderId(), request.getRecipientId(), request.getContent());
                     ApiFuture<WriteResult> result = docRef.set(message);
-
-//                    NewChatBoxRequest newChatBoxRequest = NewChatBoxRequest.builder()
-//                            .senderId(UUID.fromString(request.getRecipientId()))
-//                            .recipientId(UUID.fromString(request.getSenderId()))
-//                            .build();
-//                    chatBoxService.createNewChatBox(newChatBoxRequest); // Changed this line
                 } else {
                     DocumentReference docRef = db.collection(collectionName1).document();
                     ChatMessage message = new ChatMessage(request.getSenderId(), request.getRecipientId(), request.getContent());

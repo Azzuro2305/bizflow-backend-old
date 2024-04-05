@@ -19,11 +19,9 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class ReactServiceImpl implements ReactService {
-
     private ReactRepo reactRepo;
     private UserRepo userRepo;
     private PostRepo postRepo;
-
     private ModelMapper modelMapper;
 
     @Override

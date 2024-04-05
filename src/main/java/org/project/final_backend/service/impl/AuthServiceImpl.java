@@ -59,22 +59,6 @@ public class AuthServiceImpl implements AuthService {
         return isValidate;
     }
 
-//    @Override
-//    public boolean validateOTP(String mail, String otpRequest) {
-//        boolean isValidate = false;
-//        final OTP otp = OTPCache.getOTP(mail);
-//        // validate otp correct
-//        if (otp != null) {
-//            if(otp.getOtp().equals(otpRequest)) {
-//                if(LocalDateTime.now().isBefore(otp.getExpiredTIme())) {
-//                    // validate expired time
-//                    isValidate = true;
-//                }
-//            }
-//        }
-//        return isValidate;
-//    }
-
     private void send(String toEmail, String subject){
         final String fromEmail = EmailConstant.senderMail; //requires valid email
         final String password = EmailConstant.senderPassword;

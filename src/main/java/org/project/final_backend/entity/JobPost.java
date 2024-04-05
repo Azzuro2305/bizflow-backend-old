@@ -19,7 +19,7 @@ public class JobPost {
     private String title;
     private String description;
     private String location;
-    private String type; // eg: full time (or) part-time
+    private String type;
     private String category;
     private String qualification;
     private String exp;

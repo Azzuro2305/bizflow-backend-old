@@ -21,18 +21,14 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
-
     private CommentRepo commentRepo;
     private UserRepo userRepo;
-
     private ModelMapper modelMapper;
-
 
     @Override
     public Comment findCommentById(UUID Id) {
         final Comment comment = commentRepo.findCommentById(Id)
                 .orElseThrow(()-> new UserFoundException("Comment not found"));
-
         return comment;
     }
 

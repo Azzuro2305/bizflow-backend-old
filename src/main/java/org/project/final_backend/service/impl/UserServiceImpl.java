@@ -41,11 +41,9 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final FollowerRepo followerRepo;
-
     private final ModelMapper modelMapper;
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     AuthServiceImpl authService;
 
     @Override
@@ -155,11 +153,7 @@ public class UserServiceImpl implements UserService {
         if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
             throw new UserFoundException("User already exists!");
         } else {
-//            UUID uuid = UUID.randomUUID();
-//            long mostSigBits = Math.abs(uuid.getMostSignificantBits());
-//            UUID new_uuid = new UUID(mostSigBits, 0);
             Users user = Users.builder()
-//                    .id(new_uuid)
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
                     .userName(request.getUserName())

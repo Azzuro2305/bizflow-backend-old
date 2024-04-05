@@ -26,8 +26,3 @@ public class Follower {
 
     private LocalDateTime followedAt;
 }
-
-// This entity is to describe the relationship between users and their followers.
-// No.    User    User's followers
-// 1    @user1    @user2
-// 1    @user1    @user3

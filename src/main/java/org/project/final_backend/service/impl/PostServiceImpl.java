@@ -104,27 +104,11 @@ public class PostServiceImpl implements PostService {
         user.setPosts(user.getPosts()-1);
         userRepo.save(user);
     }
-//    @Bean
-//    public ModelMapper modelMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        modelMapper.typeMap(Post.class,PostDto.class).addMappings(mapper -> mapper.skip(PostDTO::setUser));
-//        return modelMapper;
-//    }
 
     @Override
     public List<Post> findPostsByUsersId(UUID userId) {
         return postRepo.findPostsByUsers_Id(userId);
     }
-
-//    @Bean
-//    public ModelMapper customModelMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        modelMapper.typeMap(Post.class, PostDto.class).addMappings(mapper -> {
-//            mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
-//            mapper.map(Post::getId, PostDto::setId);
-//        });
-//        return modelMapper;
-//    }
 
     @Bean
     public ModelMapper customModelMapper() {
@@ -151,26 +135,6 @@ public class PostServiceImpl implements PostService {
         // Add more mappings if you have other DTOs
         return modelMapper;
     }
-
-//    @Bean
-//    public ModelMapper customModelMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        modelMapper.typeMap(Post.class, PostDto.class).addMappings(mapper -> {
-//            mapper.map(src -> src.getUsers().getId(), PostDto::setUserId);
-//            mapper.map(Post::getId, PostDto::setId);
-//        });
-//        modelMapper.typeMap(Post.class, PostInfo.class).addMappings(mapper -> {
-//            mapper.map(src -> src.getUsers().getId(), PostInfo::setUserId);
-//        });
-//        return modelMapper;
-//    }
-
-//    @Override
-//    public Page<PostDto> getAllPosts(Pageable pageable) {
-//        Pageable sortedByUploadTimeDesc = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("uploadTime").descending());
-//        Page<Post> posts = postRepo.findAll(sortedByUploadTimeDesc);
-//        return posts.map(post -> customModelMapper().map(post, PostDto.class));
-//    }
 
     @Override
     public Page<PostDto> getAllPosts(Pageable pageable, String[] sort) {

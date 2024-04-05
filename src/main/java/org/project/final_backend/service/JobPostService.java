@@ -14,11 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface JobPostService {
-//    JobPost findJobPostById(UUID id);
     List<JobPost> findJobPostsByUsersId(UUID userId);
     JobPostInfo retrieveJobPostInfo(UUID id);
-
-
     NewJobPostResponse createJobPost(NewJobPostRequest request);
     UpdateJobPostResponse updateJobPost(UpdateJobPostRequest request);
     void deleteJobPost(UUID userId, UUID id);

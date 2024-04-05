@@ -66,14 +66,6 @@ public class WorkExpServiceImpl implements WorkExpService {
         return modelMapper.map(updatedWorkExp, UpdateWorkExpResponse.class);
     }
 
-//    @Override
-//    public List<WorkExpInfo> getAllWorkExpByUserId(UUID userId) {
-//        List<WorkExpInfo> workExperiences = workExpRepo.findAllByUserId(userId);
-//        return workExperiences.stream()
-//                .map(workExperience -> modelMapper.map(workExperience, WorkExpInfo.class))
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     public List<WorkExpInfo> getAllWorkExpByUserId(UUID userId) {
         List<WorkExp> workExps = workExpRepo.findAllByUserId(userId);
