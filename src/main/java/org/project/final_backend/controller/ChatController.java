@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/chat")
 public class ChatController {
-
+    @Autowired
     private final ChatService chatService;
 
     @Autowired
@@ -34,8 +34,9 @@ public class ChatController {
 //    }
 
     @PostMapping("/send-message")
-    public ResponseEntity<HttpResponse> sendMessage(@RequestBody NewMessageRequest request) {
+    public ResponseEntity<HttpResponse<String>> sendMessage(@RequestBody NewMessageRequest request) {
         chatService.sendMessage(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        HttpResponse<String> response = new HttpResponse<>("Successfully sent a message", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

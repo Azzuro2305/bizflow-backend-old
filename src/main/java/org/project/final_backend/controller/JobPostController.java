@@ -50,6 +50,13 @@ public class JobPostController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<HttpResponse<JobPostInfo>> getJobPostById(@RequestParam UUID id) {
+        JobPostInfo jobPostInfo = jobPostService.retrieveJobPostInfo(id);
+        HttpResponse<JobPostInfo> response = new HttpResponse<>(jobPostInfo, "Successfully retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @Bean
     public ModelMapper jobPostCustomModelMapper1() {
         ModelMapper modelMapper = new ModelMapper();

@@ -1,5 +1,8 @@
 package org.project.final_backend.service.impl;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import com.google.firebase.cloud.FirestoreClient;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
@@ -20,6 +23,7 @@ import org.project.final_backend.exception.UserNotFoundException;
 import org.project.final_backend.repo.FollowerRepo;
 import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +31,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -104,7 +111,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordException("Invalid password!");
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
-            user.setUpdatedDate(LocalDateTime.now());
+            user.setUpdatedDate(new Date());
             userRepo.save(user);
         }
     }
@@ -117,7 +124,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordException("Invalid password!");
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
-            user.setUpdatedDate(LocalDateTime.now());
+            user.setUpdatedDate(new Date());
             userRepo.save(user);
         }
     }
@@ -130,7 +137,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordException("Invalid OTP!");
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
-            user.setUpdatedDate(LocalDateTime.now());
+            user.setUpdatedDate(new Date());
             userRepo.save(user);
         }
     }
@@ -148,7 +155,11 @@ public class UserServiceImpl implements UserService {
         if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
             throw new UserFoundException("User already exists!");
         } else {
+//            UUID uuid = UUID.randomUUID();
+//            long mostSigBits = Math.abs(uuid.getMostSignificantBits());
+//            UUID new_uuid = new UUID(mostSigBits, 0);
             Users user = Users.builder()
+//                    .id(new_uuid)
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
                     .userName(request.getUserName())
@@ -156,9 +167,28 @@ public class UserServiceImpl implements UserService {
                     .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
                     .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                    .createdDate(LocalDateTime.now())
+                    .createdDate(new Date())
                     .role("FREE_USER")
                     .build();
+            userRepo.save(user);
+            Users newUser = userRepo.findUsersByMail(request.getMail()).get();
+
+            Map<String, Object> userMap = new HashMap<>();
+            BeanUtils.copyProperties(newUser, userMap);
+            userMap.put("id", newUser.getId().toString());
+            userMap.put("firstName", newUser.getFirstName());
+            userMap.put("lastName", newUser.getLastName());
+            userMap.put("userName", newUser.getUserName());
+            userMap.put("mail", newUser.getMail());
+            userMap.put("bannerImg", newUser.getBannerImg());
+            userMap.put("profileImg", newUser.getProfileImg());
+            userMap.put("password", newUser.getPassword());
+            userMap.put("createdDate", newUser.getCreatedDate());
+            userMap.put("role", newUser.getRole());
+
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef = db.collection("users").document(newUser.getId().toString());
+            ApiFuture<WriteResult> result = docRef.set(userMap);
             return modelMapper.map(userRepo.save(user), NewUserResponse.class);
         }
     }
@@ -178,7 +208,7 @@ public class UserServiceImpl implements UserService {
         user.setDob(request.getDob() != null ? request.getDob() : user.getDob());
         user.setGender(request.getGender() != null ? request.getGender() : user.getGender());
         user.setBio(request.getBio() != null ? request.getBio() : user.getBio());
-        user.setUpdatedDate(LocalDateTime.now());
+        user.setUpdatedDate(new Date());
         Users updatedUser = userRepo.save(user);
         return modelMapper.map(updatedUser, NewUserResponse.class);
     }

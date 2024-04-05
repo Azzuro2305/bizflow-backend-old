@@ -8,6 +8,7 @@ import org.project.final_backend.domain.request.jobpost.UpdateJobPostRequest;
 import org.project.final_backend.domain.response.jobpost.NewJobPostResponse;
 import org.project.final_backend.domain.response.jobpost.UpdateJobPostResponse;
 import org.project.final_backend.dto.model.JobPostDto;
+import org.project.final_backend.dto.model.JobPostInfo;
 import org.project.final_backend.entity.JobPost;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.UserNotFoundException;
@@ -39,6 +40,13 @@ public class JobPostServiceImpl implements JobPostService {
     @Override
     public List<JobPost> findJobPostsByUsersId(UUID userId) {
         return jobPostRepo.findJobPostsByUsers_Id(userId);
+    }
+
+    @Override
+    public JobPostInfo retrieveJobPostInfo(UUID id) {
+        JobPost jobPost = jobPostRepo.findJobPostById(id)
+                .orElseThrow(() -> new UserNotFoundException("Job post not found"));
+        return modelMapper.map(jobPost, JobPostInfo.class);
     }
 
 
