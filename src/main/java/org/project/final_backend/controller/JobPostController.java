@@ -51,7 +51,7 @@ public class JobPostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HttpResponse<JobPostInfo>> getJobPostById(@RequestParam UUID id) {
+    public ResponseEntity<HttpResponse<JobPostInfo>> getJobPostById(@PathVariable UUID id) {
         JobPostInfo jobPostInfo = jobPostService.retrieveJobPostInfo(id);
         HttpResponse<JobPostInfo> response = new HttpResponse<>(jobPostInfo, "Successfully retrieved", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
