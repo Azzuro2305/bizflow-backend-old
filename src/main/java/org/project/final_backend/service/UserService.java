@@ -21,7 +21,7 @@ import java.util.UUID;
 public interface UserService {
     Users findUsersById(UUID id);
     UserInfo validateUser(ValidateUserRequest request);
-    NewUserResponse registerUser(NewUserRequest request);
+    boolean registerUser(NewUserRequest request);
     NewUserResponse updateUser(UUID id, UpdateUserRequest request);
     UserInfo retrieveUserInfo(UUID id);
     UserInfo retrieveUserInfoByUserName(String userName);

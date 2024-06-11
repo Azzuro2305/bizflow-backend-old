@@ -47,14 +47,6 @@ public class UserServiceImpl implements UserService {
     AuthServiceImpl authService;
 
     @Override
-    public Users findUsersById(UUID id) {
-        final Users user = userRepo
-                .findUsersById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found!"));
-        return user;
-    }
-
-    @Override
     public UserInfo validateUser(ValidateUserRequest request) {
         final Users user = userRepo
                 .findUsersByMail(request.getMail())
@@ -64,6 +56,43 @@ public class UserServiceImpl implements UserService {
         }
         return modelMapper.map(user, UserInfo.class);
     }
+
+    @Override
+    public boolean registerUser(NewUserRequest request) {
+        if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
+            throw new UserFoundException("User already exists!");
+        } else {
+            Users user = Users.builder()
+                    .firstName(request.getFirstName())
+                    .lastName(request.getLastName())
+                    .userName(request.getUserName())
+                    .mail(request.getMail())
+                    .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
+                    .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
+                    .password(bCryptPasswordEncoder.encode(request.getPassword()))
+                    .createdDate(new Date())
+                    .role("FREE_USER")
+                    .build();
+            userRepo.save(user);
+
+            return true;
+        }
+    }
+
+    @Override
+    public Page<Users> getAllUsers(Pageable pageable) {
+        return userRepo.findAll(pageable);
+    }
+
+    @Override
+    public Users findUsersById(UUID id) {
+        final Users user = userRepo
+                .findUsersById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        return user;
+    }
+
+
 
     @Override
     public UserInfo retrieveUserInfo(UUID id) {
@@ -148,44 +177,7 @@ public class UserServiceImpl implements UserService {
         userRepo.delete(user);
     }
 
-    @Override
-    public NewUserResponse registerUser(NewUserRequest request) {
-        if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
-            throw new UserFoundException("User already exists!");
-        } else {
-            Users user = Users.builder()
-                    .firstName(request.getFirstName())
-                    .lastName(request.getLastName())
-                    .userName(request.getUserName())
-                    .mail(request.getMail())
-                    .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
-                    .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
-                    .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                    .createdDate(new Date())
-                    .role("FREE_USER")
-                    .build();
-            userRepo.save(user);
-            Users newUser = userRepo.findUsersByMail(request.getMail()).get();
 
-            Map<String, Object> userMap = new HashMap<>();
-            BeanUtils.copyProperties(newUser, userMap);
-            userMap.put("id", newUser.getId().toString());
-            userMap.put("firstName", newUser.getFirstName());
-            userMap.put("lastName", newUser.getLastName());
-            userMap.put("userName", newUser.getUserName());
-            userMap.put("mail", newUser.getMail());
-            userMap.put("bannerImg", newUser.getBannerImg());
-            userMap.put("profileImg", newUser.getProfileImg());
-            userMap.put("password", newUser.getPassword());
-            userMap.put("createdDate", newUser.getCreatedDate());
-            userMap.put("role", newUser.getRole());
-
-            Firestore db = FirestoreClient.getFirestore();
-            DocumentReference docRef = db.collection("users").document(newUser.getId().toString());
-            ApiFuture<WriteResult> result = docRef.set(userMap);
-            return modelMapper.map(userRepo.save(user), NewUserResponse.class);
-        }
-    }
 
     @Override
     public NewUserResponse updateUser(UUID id, UpdateUserRequest request) {
@@ -215,7 +207,5 @@ public class UserServiceImpl implements UserService {
 //        userRepo.save(user);
 //    }
 
-    public Page<Users> getAllUsers(Pageable pageable) {
-        return userRepo.findAll(pageable);
-    }
+
 }

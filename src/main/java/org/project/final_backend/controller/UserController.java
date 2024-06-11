@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordRequest;
 import org.project.final_backend.domain.request.password.ResetPasswordUserIdRequest;
-import org.project.final_backend.domain.request.password.VerifyMailRequest;
 import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
 import org.project.final_backend.domain.request.user.ValidateUserRequest;
-import org.project.final_backend.domain.response.VerifyMailResponse;
-import org.project.final_backend.domain.subscribe.Subscribe;
+import org.project.final_backend.domain.utility.CustomPaginationResponse;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.domain.utility.HttpResponse;
@@ -30,36 +28,107 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
-    @GetMapping("")
-    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfo(@RequestParam UUID id){
-        HttpResponse<UserInfo> response =
-                new HttpResponse<>(userService.retrieveUserInfo(id), "User retrieved", HttpStatus.OK);
+
+    @PostMapping("/auth/register")
+    public ResponseEntity<HttpResponse<Boolean>> registerUser(@RequestBody NewUserRequest request) {
+        boolean newUserResponse = userService.registerUser(request);
+
+        HttpResponse<Boolean> response = new HttpResponse<>(newUserResponse, "Successfully registered", HttpStatus.CREATED, newUserResponse);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<HttpResponse<UserInfo>> validateUser(@RequestBody ValidateUserRequest request){
+        UserInfo userInfo = userService.validateUser(request);
+        HttpResponse<UserInfo> response = new HttpResponse<>(userInfo,"User Validate", HttpStatus.OK, userInfo != null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/subscribe")
-    public ResponseEntity<HttpResponse<Void>> purchase(@RequestBody Subscribe subscribe){
-        userService.purchase(subscribe);
-        HttpResponse<Void> response = new HttpResponse<>(null, "Subscription successful", HttpStatus.OK);
+    @GetMapping("/users")
+    public ResponseEntity<CustomPaginationResponse<Users>> getAllUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "userName,asc") String[] sort) {
+        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
+                .map(s -> s.split(","))
+                .map(arr -> arr.length > 1 ? (arr[1].equals("desc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("userName"))
+                .collect(Collectors.toList()))
+                .stream()
+                .collect(Collectors.toList());
+        Sort sorting = Sort.by(orders);
+
+        Page<Users> usersPage = userService.getAllUsers(PageRequest.of(page - 1, size, sorting));
+
+        CustomPaginationResponse.Meta meta = new CustomPaginationResponse.Meta(usersPage, page); // Pass the original page number
+        CustomPaginationResponse<Users> response = new CustomPaginationResponse<>(usersPage.getContent(), meta, HttpStatus.OK, "Get All user Successful Retrieved", true);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/get-by-username")
-    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfoByUserName(@RequestParam String userName){
-        HttpResponse<UserInfo> response =
-                new HttpResponse<>(userService.retrieveUserInfoByUserName(userName), "User retrieved", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
-    @PostMapping("/verify-mail")
-    public ResponseEntity<HttpResponse<VerifyMailResponse>> verifyMail(@RequestBody VerifyMailRequest request){
-        HttpResponse<VerifyMailResponse> response =
-                new HttpResponse<>(userService.verifyMail(request), "Mail verified", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+
+
+
+
+
+//    @GetMapping("/users")
+//    public ResponseEntity<Page<Users>> getAllUsers(
+//            @RequestParam(defaultValue = "1") int page,
+//            @RequestParam(defaultValue = "6") int size,
+//            @RequestParam(defaultValue = "userName,asc") String[] sort) {
+//        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
+//                .map(s -> s.split(","))
+//                .map(arr -> arr.length > 1 ? (arr[1].equals("desc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("userName"))
+//                .collect(Collectors.toList()))
+//                .stream()
+//                .collect(Collectors.toList());
+//        Sort sorting = Sort.by(orders);
+//
+//        Page<Users> usersPage = userService.getAllUsers(PageRequest.of(page, size, sorting));
+//
+//        return new ResponseEntity<>(usersPage, HttpStatus.OK);
+//    }
+
+
+
+
+
+
+
+
+
+
+
+//    @GetMapping("")
+//    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfo(@RequestParam UUID id){
+//        HttpResponse<UserInfo> response =
+//                new HttpResponse<>(userService.retrieveUserInfo(id), "User retrieved", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+//
+//    @PutMapping("/subscribe")
+//    public ResponseEntity<HttpResponse<Void>> purchase(@RequestBody Subscribe subscribe){
+//        userService.purchase(subscribe);
+//        HttpResponse<Void> response = new HttpResponse<>(null, "Subscription successful", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/get-by-username")
+//    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfoByUserName(@RequestParam String userName){
+//        HttpResponse<UserInfo> response =
+//                new HttpResponse<>(userService.retrieveUserInfoByUserName(userName), "User retrieved", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/verify-mail")
+//    public ResponseEntity<HttpResponse<VerifyMailResponse>> verifyMail(@RequestBody VerifyMailRequest request){
+//        HttpResponse<VerifyMailResponse> response =
+//                new HttpResponse<>(userService.verifyMail(request), "Mail verified", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 
     @PutMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request){
@@ -98,33 +167,6 @@ public class UserController {
 //                new HttpResponse<>(userService.registerUser(request), "Successfully registered", HttpStatus.CREATED);
 //        return new ResponseEntity<>(response, HttpStatus.CREATED);
 //    }
-    @PostMapping("")
-    public ResponseEntity<HttpResponse<NewUserResponse>> registerUser(@RequestBody NewUserRequest request){
-        HttpResponse<NewUserResponse> response =
-                new HttpResponse<>(userService.registerUser(request), "Successfully registered", HttpStatus.CREATED);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
 
-    @PostMapping("/validate")
-    public ResponseEntity<HttpResponse<UserInfo>> validateUser(@RequestBody ValidateUserRequest request){
-            HttpResponse<UserInfo> response =
-                    new HttpResponse<>(userService.validateUser(request), "User validated", HttpStatus.OK);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
-    @GetMapping("/get-all-users")
-    public ResponseEntity<Page<Users>> getAllUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size,
-            @RequestParam(defaultValue = "userName,asc") String[] sort) {
-        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
-                .map(s -> s.split(","))
-                .map(arr -> arr.length > 1 ? (arr[1].equals("desc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("userName"))
-                .collect(Collectors.toList()))
-                .stream()
-                .collect(Collectors.toList());
-        Sort sorting = Sort.by(orders);
-        Page<Users> usersPage = userService.getAllUsers(PageRequest.of(page, size, sorting));
-        return new ResponseEntity<>(usersPage, HttpStatus.OK);
-    }
 }
