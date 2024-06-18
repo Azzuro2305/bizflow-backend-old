@@ -27,35 +27,11 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin
 @AllArgsConstructor
-@RequestMapping("/feed")
+@RequestMapping("/api")
 public class PostController {
     private PostService postService;
     private final ModelMapper modelMapper;
 
-    @PostMapping
-    public ResponseEntity<HttpResponse<NewPostResponse>> createPost(@RequestBody NewPostRequest request) {
-        HttpResponse<NewPostResponse> response = new HttpResponse<>(postService.createPost(request), "Successfully created", HttpStatus.CREATED);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @GetMapping
-    public ResponseEntity<HttpResponse<PostInfo>> retrievePostInfo(@RequestParam UUID postId) {
-        HttpResponse<PostInfo> response = new HttpResponse<>(postService.retrievePostInfo(postId), "Successfully retrieved", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PutMapping
-    public ResponseEntity<HttpResponse<UpdatePostResponse>> updatePost(@RequestBody UpdatePostRequest request) {
-        HttpResponse<UpdatePostResponse> response = new HttpResponse<>(postService.updatePost(request), "Successfully updated", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping()
-    public ResponseEntity<HttpResponse<String>> deletePost(@RequestParam UUID userId, UUID postId) {
-        postService.deletePost(userId, postId);
-        HttpResponse<String> response = new HttpResponse<>("Successfully deleted", HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
     @GetMapping("/posts")
     public Page<PostDto> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
@@ -63,6 +39,48 @@ public class PostController {
             @RequestParam(defaultValue = "uploadTime,desc") String[] sort) {
         return postService.getAllPosts(PageRequest.of(page, size), sort);
     }
+
+    @GetMapping("/posts/{userId}")
+    public ResponseEntity<List<PostInfo>> getPostsByUserId(@PathVariable UUID userId) {
+        List<Post> posts = postService.findPostsByUsersId(userId);
+        List<PostInfo> postInfos = posts.stream()
+                .map(post -> customModelMapper1().map(post, PostInfo.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(postInfos);
+    }
+
+    @PostMapping("/posts")
+    public ResponseEntity<HttpResponse<NewPostResponse>> createPost(@RequestBody NewPostRequest request) {
+        NewPostResponse postResponse = postService.createPost(request);
+        HttpResponse<NewPostResponse> response = new HttpResponse<>(postResponse,postResponse != null, "Successfully created", HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<HttpResponse<UpdatePostResponse>> updatePost(@PathVariable UUID id, @RequestBody UpdatePostRequest request) {
+        UpdatePostResponse postResponse = postService.updatePost(id,request);
+        HttpResponse<UpdatePostResponse> response = new HttpResponse<>(postResponse, postResponse!= null, "Successfully updated", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts")
+    public ResponseEntity<HttpResponse<String>> deletePost(@RequestParam UUID userId, UUID postId) {
+        postService.deletePost(userId, postId);
+        HttpResponse<String> response = new HttpResponse<>("Successfully deleted", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+//
+//    @GetMapping
+//    public ResponseEntity<HttpResponse<PostInfo>> retrievePostInfo(@RequestParam UUID postId) {
+//        HttpResponse<PostInfo> response = new HttpResponse<>(postService.retrievePostInfo(postId), "Successfully retrieved", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+//
+
+
+
+
 
 //    @GetMapping("/posts/{userId}")
 //    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable UUID userId) {
@@ -83,14 +101,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/posts/{userId}")
-    public ResponseEntity<List<PostInfo>> getPostsByUserId(@PathVariable UUID userId) {
-        List<Post> posts = postService.findPostsByUsersId(userId);
-        List<PostInfo> postInfos = posts.stream()
-                .map(post -> customModelMapper1().map(post, PostInfo.class))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(postInfos);
-    }
+
 
 //    @GetMapping("/{postId}")
 //    public Post getPostById(@PathVariable UUID postId) {

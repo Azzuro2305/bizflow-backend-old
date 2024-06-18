@@ -17,28 +17,32 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/education")
+@RequestMapping("/api/educations")
 public class EducationController {
     final EducationService educationService;
 
     @PostMapping("/{id}")
     public ResponseEntity<HttpResponse<NewEducationResponse>> addEducation(@PathVariable UUID id, @RequestBody NewEducationRequest request){
+        NewEducationResponse newEducationResponse = educationService.addEducation(id, request);
         HttpResponse<NewEducationResponse> response =
-                new HttpResponse<>(educationService.addEducation(id, request), "Education added", HttpStatus.CREATED);
+                new HttpResponse<>(newEducationResponse,newEducationResponse != null, "Education added", HttpStatus.CREATED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/show")
     public ResponseEntity<HttpResponse<EducationInfo>> getEducation(@PathVariable UUID id){
+        EducationInfo education = educationService.getEducation(id);
         HttpResponse<EducationInfo> response =
-                new HttpResponse<>(educationService.getEducation(id), "Education retrieved", HttpStatus.OK);
+                new HttpResponse<>(education,education != null, "Education retrieved", HttpStatus.OK );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<HttpResponse<UpdateEducationResponse>> updateEducation(@PathVariable UUID id, @RequestBody UpdateEducationRequest request){
+        UpdateEducationResponse educationResponse = educationService.updateEducation(id, request);
+
         HttpResponse<UpdateEducationResponse> response =
-                new HttpResponse<>(educationService.updateEducation(id, request), "Education updated", HttpStatus.OK);
+                new HttpResponse<>(educationResponse, educationResponse != null,"Education updated", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -49,10 +53,11 @@ public class EducationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<HttpResponse<List<EducationInfo>>> getAllEducationsByUserId(@PathVariable UUID userId){
+        List<EducationInfo> education = educationService.getAllEducationsByUserId(userId);
         HttpResponse<List<EducationInfo>> response =
-                new HttpResponse<>(educationService.getAllEducationsByUserId(userId), "Educations retrieved", HttpStatus.OK);
+                new HttpResponse<>(education,education != null, "Educations retrieved", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

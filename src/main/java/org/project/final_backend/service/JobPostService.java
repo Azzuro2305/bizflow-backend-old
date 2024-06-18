@@ -17,7 +17,7 @@ public interface JobPostService {
     List<JobPost> findJobPostsByUsersId(UUID userId);
     JobPostInfo retrieveJobPostInfo(UUID id);
     NewJobPostResponse createJobPost(NewJobPostRequest request);
-    UpdateJobPostResponse updateJobPost(UpdateJobPostRequest request);
+    UpdateJobPostResponse updateJobPost(UUID id, UpdateJobPostRequest request);
     void deleteJobPost(UUID userId, UUID id);
     Page<JobPostDto> getAllJobPosts(Pageable pageable, String[] sort);
 }

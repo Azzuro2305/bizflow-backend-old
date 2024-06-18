@@ -16,11 +16,11 @@ public class CustomPaginationResponse<T> {
     private Meta meta;
     private List<T> data;
 
-    public CustomPaginationResponse(List<T> data, Meta meta, HttpStatus httpStatus, String message, boolean isSuccess) {
-        this.meta = meta;
+    public CustomPaginationResponse(List<T> data, boolean isSuccess, Meta meta, HttpStatus httpStatus, String message) {
         this.code = httpStatus.value();
         this.message = message;
         this.isSuccess = isSuccess;
+        this.meta = meta;
         this.data = data;
     }
 

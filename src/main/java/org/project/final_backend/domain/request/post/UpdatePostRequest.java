@@ -8,7 +8,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UpdatePostRequest {
-    private UUID postId;
     private String caption;
     private String uploadPhoto;
 }

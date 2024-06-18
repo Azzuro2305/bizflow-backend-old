@@ -9,7 +9,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UpdateJobPostRequest {
-    private UUID jobPostId;
     private String title;
     private String description;
     private String location;

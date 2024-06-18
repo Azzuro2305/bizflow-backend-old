@@ -19,7 +19,7 @@ public interface PostService {
     List<Post> findPostsByUsersId(UUID userId);
     PostInfo retrievePostInfo(UUID id);
     NewPostResponse createPost(NewPostRequest request);
-    UpdatePostResponse updatePost(UpdatePostRequest request);
+    UpdatePostResponse updatePost(UUID id,UpdatePostRequest request);
     Map<String, Object> searchPostsAndUsers(int pageNumber, String searchKey);
     void deletePost(UUID userId, UUID id);
     Page<PostDto> getAllPosts(Pageable pageable, String[] sort);

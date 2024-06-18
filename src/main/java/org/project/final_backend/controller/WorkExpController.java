@@ -17,42 +17,47 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/work-exp")
+@RequestMapping("/api/work-experiences")
 public class WorkExpController {
     final WorkExpService workExpService;
 
     @PostMapping("/{id}")
     public ResponseEntity<HttpResponse<NewWorkExpResponse>> addWorkExp(@PathVariable UUID id, @RequestBody NewWorkExpRequest request){
+        NewWorkExpResponse workExp = workExpService.addWorkExp(id, request);
         HttpResponse<NewWorkExpResponse> response =
-                new HttpResponse<>(workExpService.addWorkExp(id, request), "Work experience added", HttpStatus.CREATED);
+                new HttpResponse<>(workExp, workExp != null, "Work experience added", HttpStatus.CREATED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/show")
     public ResponseEntity<HttpResponse<WorkExpInfo>> getWorkExp(@PathVariable UUID id){
+        WorkExpInfo workExp = workExpService.getWorkExp(id);
         HttpResponse<WorkExpInfo> response =
-                new HttpResponse<>(workExpService.getWorkExp(id), "Work experience retrieved", HttpStatus.OK);
+                new HttpResponse<>(workExp, workExp!= null, "Work experience retrieved", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<HttpResponse<UpdateWorkExpResponse>> updateWorkExp(@PathVariable UUID id, @RequestBody UpdateWorkExpRequest request){
+        UpdateWorkExpResponse workExp = workExpService.updateWorkExp(id, request);
+
         HttpResponse<UpdateWorkExpResponse> response =
-                new HttpResponse<>(workExpService.updateWorkExp(id, request), "Work experience updated", HttpStatus.OK);
+                new HttpResponse<>(workExp,workExp != null, "Work experience updated", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/work-experiences/{id}")
     public ResponseEntity<HttpResponse<String>> deleteWorkExp(@PathVariable UUID id){
         workExpService.deleteWorkExp(id);
         HttpResponse<String> response = new HttpResponse<>("Work experience deleted", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<HttpResponse<List<WorkExpInfo>>> getAllWorkExpByUserId(@PathVariable UUID userId){
+        List<WorkExpInfo> workExp = workExpService.getAllWorkExpByUserId(userId);
         HttpResponse<List<WorkExpInfo>> response =
-                new HttpResponse<>(workExpService.getAllWorkExpByUserId(userId), "Work experiences retrieved", HttpStatus.OK);
+                new HttpResponse<>(workExp, workExp != null, "Work experiences retrieved", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

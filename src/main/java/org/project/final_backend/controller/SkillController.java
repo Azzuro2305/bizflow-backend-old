@@ -17,28 +17,31 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/skill")
+@RequestMapping("/api/skills")
 public class SkillController {
     final SkillService skillService;
 
     @PostMapping("/{id}")
     public ResponseEntity<HttpResponse<NewSkillResponse>> addSkill(@PathVariable UUID id, @RequestBody NewSkillRequest request){
+        NewSkillResponse skillResponse = skillService.addSkill(id, request);
         HttpResponse<NewSkillResponse> response =
-                new HttpResponse<>(skillService.addSkill(id, request), "Skill added", HttpStatus.CREATED);
+                new HttpResponse<>(skillResponse,skillResponse != null , "Skill added", HttpStatus.CREATED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/show")
     public ResponseEntity<HttpResponse<SkillInfo>> getSkill(@PathVariable UUID id){
+        SkillInfo skillInfo = skillService.getSkill(id);
         HttpResponse<SkillInfo> response =
-                new HttpResponse<>(skillService.getSkill(id), "Skill retrieved", HttpStatus.OK);
+                new HttpResponse<>(skillInfo, skillInfo != null, "Skill retrieved", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<HttpResponse<UpdateSkillResponse>> updateSkill(@PathVariable UUID id, @RequestBody UpdateSkillRequest request){
+        UpdateSkillResponse skillResponse = skillService.updateSkill(id, request);
         HttpResponse<UpdateSkillResponse> response =
-                new HttpResponse<>(skillService.updateSkill(id, request), "Skill updated", HttpStatus.OK);
+                new HttpResponse<>(skillResponse, skillResponse != null, "Skill updated", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -49,10 +52,11 @@ public class SkillController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<HttpResponse<List<SkillInfo>>> getAllSkillsByUserId(@PathVariable UUID userId){
+        List<SkillInfo> skills = skillService.getAllSkillsByUserId(userId);
         HttpResponse<List<SkillInfo>> response =
-                new HttpResponse<>(skillService.getAllSkillsByUserId(userId), "Skills retrieved", HttpStatus.OK);
+                new HttpResponse<>(skills, skills != null, "Skills retrieved", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

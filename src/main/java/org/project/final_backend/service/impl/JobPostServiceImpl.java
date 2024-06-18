@@ -74,8 +74,8 @@ public class JobPostServiceImpl implements JobPostService {
     }
 
     @Override
-    public UpdateJobPostResponse updateJobPost(UpdateJobPostRequest request) {
-        JobPost jobPost = jobPostRepo.findJobPostById(request.getJobPostId())
+    public UpdateJobPostResponse updateJobPost(UUID id, UpdateJobPostRequest request) {
+        JobPost jobPost = jobPostRepo.findJobPostById(id)
                 .orElseThrow(() -> new UserNotFoundException("Job post not found"));
         jobPost.setTitle(request.getTitle() != null ? request.getTitle() : jobPost.getTitle());
         jobPost.setDescription(request.getDescription() != null ? request.getDescription() : jobPost.getDescription());

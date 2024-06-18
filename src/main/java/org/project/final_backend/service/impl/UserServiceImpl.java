@@ -1,87 +1,55 @@
 package org.project.final_backend.service.impl;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
-import com.google.firebase.cloud.FirestoreClient;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
-import org.project.final_backend.domain.request.password.ResetPasswordRequest;
-import org.project.final_backend.domain.request.password.ResetPasswordUserIdRequest;
-import org.project.final_backend.domain.request.password.VerifyMailRequest;
-import org.project.final_backend.domain.request.user.NewUserRequest;
+import org.project.final_backend.domain.request.password.*;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
-import org.project.final_backend.domain.request.user.ValidateUserRequest;
-import org.project.final_backend.domain.response.VerifyMailResponse;
 import org.project.final_backend.domain.response.user.NewUserResponse;
 import org.project.final_backend.domain.subscribe.Subscribe;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.entity.Users;
 import org.project.final_backend.exception.InvalidPasswordException;
-import org.project.final_backend.exception.UserFoundException;
 import org.project.final_backend.exception.UserNotFoundException;
-import org.project.final_backend.repo.FollowerRepo;
 import org.project.final_backend.repo.UserRepo;
 import org.project.final_backend.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
-    private final FollowerRepo followerRepo;
     private final ModelMapper modelMapper;
+
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    AuthServiceImpl authService;
+
 
     @Override
-    public UserInfo validateUser(ValidateUserRequest request) {
-        final Users user = userRepo
-                .findUsersByMail(request.getMail())
-                .orElseThrow(() -> new UserNotFoundException("User have not registered yet!"));
-        if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("Invalid password!");
-        }
-        return modelMapper.map(user, UserInfo.class);
-    }
+    public Page<Users> getAllUsers(Pageable pageable, String[] sort) {
+        List<Sort.Order> orders =  new LinkedHashSet<>(Arrays.stream(sort)
+                .map(s -> s.split(","))
+                .map(arr -> arr.length > 1 ? (arr[1].equals("asc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("userName"))
+                .collect(Collectors.toList()))
+                .stream()
+                .collect(Collectors.toList());
 
-    @Override
-    public boolean registerUser(NewUserRequest request) {
-        if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
-            throw new UserFoundException("User already exists!");
-        } else {
-            Users user = Users.builder()
-                    .firstName(request.getFirstName())
-                    .lastName(request.getLastName())
-                    .userName(request.getUserName())
-                    .mail(request.getMail())
-                    .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
-                    .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
-                    .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                    .createdDate(new Date())
-                    .role("FREE_USER")
-                    .build();
-            userRepo.save(user);
+        Sort sorting = Sort.by(orders);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
 
-            return true;
-        }
-    }
+        Page<Users> users =  userRepo.findAll(sortedPageable);
 
-    @Override
-    public Page<Users> getAllUsers(Pageable pageable) {
-        return userRepo.findAll(pageable);
+        System.out.println(sortedPageable);
+        System.out.println(users);
+
+        return users;
     }
 
     @Override
@@ -119,29 +87,8 @@ public class UserServiceImpl implements UserService {
         userRepo.save(user);
     }
 
-    @Override
-    public VerifyMailResponse verifyMail(VerifyMailRequest request) {
-        if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
-            VerifyMailResponse response = new VerifyMailResponse();
-            response.setMail(request.getMail());
-        } else {
-            throw new UserNotFoundException("User not found!");
-        }
-        return modelMapper.map(request, VerifyMailResponse.class);
-    }
 
-    @Override
-    public void resetPassword(ResetPasswordRequest request) {
-        final Users user = userRepo.findUsersById(userRepo.findUsersByMail(request.getMail()).get().getId())
-                .orElseThrow(() -> new UserNotFoundException("User not found in database!"));
-        if (!bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("Invalid password!");
-        } else {
-            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
-            user.setUpdatedDate(new Date());
-            userRepo.save(user);
-        }
-    }
+
 
     @Override
     public void resetPasswordWithUserId(UUID id, ResetPasswordUserIdRequest request) {
@@ -156,18 +103,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public void resetPasswordWithOTP(ResetPasswordOTPRequest request) {
-        final Users user = userRepo.findUsersByMail(request.getMail())
-                .orElseThrow(() -> new UserNotFoundException("User not found!"));
-        if (!authService.validateOTP(request)) {
-            throw new InvalidPasswordException("Invalid OTP!");
-        } else {
-            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
-            user.setUpdatedDate(new Date());
-            userRepo.save(user);
-        }
-    }
 
     @Override
     public void deleteUser(UUID id) {

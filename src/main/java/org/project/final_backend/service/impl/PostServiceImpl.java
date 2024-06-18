@@ -88,8 +88,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public UpdatePostResponse updatePost(UpdatePostRequest request) {
-        Post post=postRepo.findPostById(request.getPostId()).orElseThrow(()->new UserNotFoundException("Post not found!"));
+    public UpdatePostResponse updatePost(UUID id,UpdatePostRequest request) {
+        Post post=postRepo.findPostById(id).orElseThrow(()->new UserNotFoundException("Post not found!"));
         post.setCaption(request.getCaption() != null ? request.getCaption() : post.getCaption());
         post.setUploadPhoto(request.getUploadPhoto() != null ? request.getUploadPhoto() : post.getUploadPhoto());
         post.setUpdateTime(LocalDateTime.now());

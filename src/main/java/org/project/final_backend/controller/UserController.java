@@ -1,12 +1,7 @@
 package org.project.final_backend.controller;
 
 import lombok.AllArgsConstructor;
-import org.project.final_backend.domain.request.password.ResetPasswordOTPRequest;
-import org.project.final_backend.domain.request.password.ResetPasswordRequest;
-import org.project.final_backend.domain.request.password.ResetPasswordUserIdRequest;
-import org.project.final_backend.domain.request.user.NewUserRequest;
 import org.project.final_backend.domain.request.user.UpdateUserRequest;
-import org.project.final_backend.domain.request.user.ValidateUserRequest;
 import org.project.final_backend.domain.utility.CustomPaginationResponse;
 import org.project.final_backend.dto.model.UserInfo;
 import org.project.final_backend.domain.response.user.NewUserResponse;
@@ -15,64 +10,51 @@ import org.project.final_backend.entity.Users;
 import org.project.final_backend.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<HttpResponse<Boolean>> registerUser(@RequestBody NewUserRequest request) {
-        boolean newUserResponse = userService.registerUser(request);
-
-        HttpResponse<Boolean> response = new HttpResponse<>(newUserResponse, "Successfully registered", HttpStatus.CREATED, newUserResponse);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/auth/login")
-    public ResponseEntity<HttpResponse<UserInfo>> validateUser(@RequestBody ValidateUserRequest request){
-        UserInfo userInfo = userService.validateUser(request);
-        HttpResponse<UserInfo> response = new HttpResponse<>(userInfo,"User Validate", HttpStatus.OK, userInfo != null);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<CustomPaginationResponse<Users>> getAllUsers(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "6") int size,
-            @RequestParam(defaultValue = "userName,asc") String[] sort) {
-        List<Sort.Order> orders = new LinkedHashSet<>(Arrays.stream(sort)
-                .map(s -> s.split(","))
-                .map(arr -> arr.length > 1 ? (arr[1].equals("desc") ? Sort.Order.desc(arr[0]) : Sort.Order.asc(arr[0])) : Sort.Order.asc("userName"))
-                .collect(Collectors.toList()))
-                .stream()
-                .collect(Collectors.toList());
-        Sort sorting = Sort.by(orders);
+            @RequestParam(defaultValue = "userName,desc") String[] sort) {
 
-        Page<Users> usersPage = userService.getAllUsers(PageRequest.of(page - 1, size, sorting));
+        Page<Users> usersPage = userService.getAllUsers(PageRequest.of(page-1, size), sort);
 
         CustomPaginationResponse.Meta meta = new CustomPaginationResponse.Meta(usersPage, page); // Pass the original page number
-        CustomPaginationResponse<Users> response = new CustomPaginationResponse<>(usersPage.getContent(), meta, HttpStatus.OK, "Get All user Successful Retrieved", true);
+        CustomPaginationResponse<Users> response = new CustomPaginationResponse<>(
+                usersPage.getContent(),
+                true,
+                meta,
+                HttpStatus.OK,
+                "Get All users Successfully Retrieved"
+        );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfo(@PathVariable UUID id){
+        UserInfo userInfo = userService.retrieveUserInfo(id);
 
+        HttpResponse<UserInfo> response =
+                new HttpResponse<>(userInfo,userInfo != null, "User retrieved", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-
-
-
+//    @PutMapping("/{id}/reset-password")
+//    public ResponseEntity<Void> resetPasswordWithUserId(@PathVariable UUID id, @RequestBody ResetPasswordUserIdRequest request){
+//        userService.resetPasswordWithUserId(id, request);
+//        return ResponseEntity.noContent().build();
+//    }
 
 //    @GetMapping("/users")
 //    public ResponseEntity<Page<Users>> getAllUsers(
@@ -92,22 +74,12 @@ public class UserController {
 //        return new ResponseEntity<>(usersPage, HttpStatus.OK);
 //    }
 
-
-
-
-
-
-
-
-
-
-
-//    @GetMapping("")
-//    public ResponseEntity<HttpResponse<UserInfo>> retrieveUserInfo(@RequestParam UUID id){
-//        HttpResponse<UserInfo> response =
-//                new HttpResponse<>(userService.retrieveUserInfo(id), "User retrieved", HttpStatus.OK);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    @PutMapping("/auth/reset-password-otp")
+//    public ResponseEntity<Void> resetPasswordWithOTP(@RequestBody ResetPasswordOTPRequest request){
+//        userService.resetPasswordWithOTP(request);
+//        return ResponseEntity.noContent().build();
 //    }
+
 //
 //    @PutMapping("/subscribe")
 //    public ResponseEntity<HttpResponse<Void>> purchase(@RequestBody Subscribe subscribe){
@@ -123,30 +95,10 @@ public class UserController {
 //        return new ResponseEntity<>(response, HttpStatus.OK);
 //    }
 //
-//    @PostMapping("/verify-mail")
-//    public ResponseEntity<HttpResponse<VerifyMailResponse>> verifyMail(@RequestBody VerifyMailRequest request){
-//        HttpResponse<VerifyMailResponse> response =
-//                new HttpResponse<>(userService.verifyMail(request), "Mail verified", HttpStatus.OK);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 
-    @PutMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request){
-        userService.resetPassword(request);
-        return ResponseEntity.noContent().build();
-    }
 
-    @PutMapping("/{id}/reset-password")
-    public ResponseEntity<Void> resetPasswordWithUserId(@PathVariable UUID id, @RequestBody ResetPasswordUserIdRequest request){
-        userService.resetPasswordWithUserId(id, request);
-        return ResponseEntity.noContent().build();
-    }
 
-    @PutMapping("/reset-password-otp")
-    public ResponseEntity<Void> resetPasswordWithOTP(@RequestBody ResetPasswordOTPRequest request){
-        userService.resetPasswordWithOTP(request);
-        return ResponseEntity.noContent().build();
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpResponse<String>> deleteUser(@PathVariable UUID id){
