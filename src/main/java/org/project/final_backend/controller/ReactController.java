@@ -19,16 +19,16 @@ public class ReactController {
 
     private ReactService reactService;
 
-    @PostMapping
-    public ResponseEntity<HttpResponse<NewReactResponse>> createReact(@RequestBody NewReactRequest request){
-        HttpResponse<NewReactResponse> response = new HttpResponse<>(reactService.createReact(request),"Ok",HttpStatus.CREATED);
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<HttpResponse<String>> deleteReact(@RequestParam UUID id){
-        reactService.deleteReact(id);
-        HttpResponse<String> response = new HttpResponse<>("React deleted", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<HttpResponse<NewReactResponse>> createReact(@RequestBody NewReactRequest request){
+//        HttpResponse<NewReactResponse> response = new HttpResponse<>(reactService.createReact(request),"Ok",HttpStatus.CREATED);
+//        return new ResponseEntity<>(response,HttpStatus.CREATED);
+//    }
+//
+//    @DeleteMapping
+//    public ResponseEntity<HttpResponse<String>> deleteReact(@RequestParam UUID id){
+//        reactService.deleteReact(id);
+//        HttpResponse<String> response = new HttpResponse<>("React deleted", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 }

@@ -52,19 +52,19 @@ public class AuthServiceImpl implements AuthService {
     public boolean registerUser(NewUserRequest request) {
         if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
             throw new UserFoundException("User already exists!");
-        } else if (request.getPassword().length() <= 8) {
+        } else if (request.getPassword().length() < 8) {
             throw new Error400Exception("Password length must be 8!");
         } else {
             Users user = Users.builder()
-                    .firstName(request.getFirstName())
-                    .lastName(request.getLastName())
+//                    .firstName(request.getFirstName())
+//                    .lastName(request.getLastName())
                     .userName(request.getUserName())
                     .mail(request.getMail())
                     .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
                     .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .createdDate(new Date())
-                    .role("FREE_USER")
+                    .role("User")
                     .build();
             userRepo.save(user);
 

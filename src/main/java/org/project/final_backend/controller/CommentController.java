@@ -21,28 +21,28 @@ public class CommentController {
 
     private CommentService commentService;
 
-    @PostMapping
-    public ResponseEntity<HttpResponse<NewCommentResponse>> createComment(@RequestParam UUID user_id, @RequestParam UUID post_id, @RequestBody NewCommentRequest request){
-        HttpResponse<NewCommentResponse> response = new HttpResponse<>(commentService.createComment(user_id, post_id, request),"comment created",HttpStatus.CREATED);
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<NewCommentResponse> updateComment(@PathVariable UUID id, @RequestBody NewCommentRequest request){
-        NewCommentResponse response= commentService.updateComment(id,request);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<CommentInfo> retrieveCommentInfo(@RequestParam UUID id){
-        return ResponseEntity.ok(commentService.retrieveCommentInfo(id));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpResponse<String>> deleteComment(@PathVariable UUID id){
-        commentService.deleteComment(id);
-        HttpResponse<String> response = new HttpResponse<>("Comment deleted", HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<HttpResponse<NewCommentResponse>> createComment(@RequestParam UUID user_id, @RequestParam UUID post_id, @RequestBody NewCommentRequest request){
+//        HttpResponse<NewCommentResponse> response = new HttpResponse<>(commentService.createComment(user_id, post_id, request),"comment created",HttpStatus.CREATED);
+//        return new ResponseEntity<>(response,HttpStatus.CREATED);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity<NewCommentResponse> updateComment(@PathVariable UUID id, @RequestBody NewCommentRequest request){
+//        NewCommentResponse response= commentService.updateComment(id,request);
+//
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<CommentInfo> retrieveCommentInfo(@RequestParam UUID id){
+//        return ResponseEntity.ok(commentService.retrieveCommentInfo(id));
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<HttpResponse<String>> deleteComment(@PathVariable UUID id){
+//        commentService.deleteComment(id);
+//        HttpResponse<String> response = new HttpResponse<>("Comment deleted", HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 }

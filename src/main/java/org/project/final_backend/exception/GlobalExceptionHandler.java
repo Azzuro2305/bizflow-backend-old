@@ -17,17 +17,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<HttpResponse<Void>> handleUserNotFoundException(UserNotFoundException ex) {
-        HttpResponse<Void> response = new HttpResponse<>(null, false, ex.getMessage(), HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        HttpResponse<Void> response = new HttpResponse<>(null, false, ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<HttpResponse<Void>> handleInvalidPasswordException(InvalidPasswordException ex) {
-        HttpResponse<Void> response = new HttpResponse<>(null,false, ex.getMessage(), HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        HttpResponse<Void> response = new HttpResponse<>(null,false, ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Error400Exception.class)

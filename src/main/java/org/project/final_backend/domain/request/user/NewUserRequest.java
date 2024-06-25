@@ -6,12 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NewUserRequest {
-    private String firstName;
-    private String lastName;
-//    private String userName;
-    public String getUserName() {
-        return firstName + " " + lastName;
-    }
+    private String userName;
+//    private String lastName;
+//    public String getUserName() {
+//        return firstName + " " + lastName;
+//    }
     private String mail;
     private String password;
 }
