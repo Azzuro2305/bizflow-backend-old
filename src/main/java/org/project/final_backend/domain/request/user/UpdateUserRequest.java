@@ -10,11 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UpdateUserRequest {
-    private String firstName;
-    private String lastName;
-    public String getUserName() {
-        return firstName + " " + lastName;
-    }
+    private String userName;
     private String mail;
     private String phoneNumber;
     private String address;

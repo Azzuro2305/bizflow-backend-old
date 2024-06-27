@@ -11,11 +11,7 @@ import java.util.UUID;
 @Setter
 public class NewUserResponse {
     private UUID id;
-    private String firstName;
-    private String lastName;
-    public String getUserName() {
-        return firstName + " " + lastName;
-    }
+    private String userName;
     private String mail;
     private String phoneNumber;
     private String password;

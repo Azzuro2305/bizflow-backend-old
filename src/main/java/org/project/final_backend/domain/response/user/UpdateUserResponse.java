@@ -11,13 +11,11 @@ import java.util.UUID;
 @Setter
 public class UpdateUserResponse {
     private UUID id;
-    private String firstName;
-    private String lastName;
+
     private String userName;
     private String mail;
     private String phoneNumber;
     private String address;
-//    private Integer role;
     private LocalDate dob;
     private LocalDateTime updatedDate;
     private String gender;

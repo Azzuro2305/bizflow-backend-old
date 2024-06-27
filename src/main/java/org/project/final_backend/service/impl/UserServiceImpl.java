@@ -118,8 +118,7 @@ public class UserServiceImpl implements UserService {
     public NewUserResponse updateUser(UUID id, UpdateUserRequest request) {
         Users user = userRepo.findUsersById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
-        user.setFirstName(request.getFirstName() != null ? request.getFirstName() : user.getFirstName());
-        user.setLastName(request.getLastName() != null ? request.getLastName() : user.getLastName());
+        user.setUserName(request.getUserName() != null ? request.getUserName() : user.getUserName());
         user.setUserName(request.getUserName() != null ? request.getUserName() : user.getUserName());
         user.setMail(request.getMail() != null ? request.getMail() : user.getMail());
         user.setPhoneNumber(request.getPhoneNumber() != null ? request.getPhoneNumber() : user.getPhoneNumber());
