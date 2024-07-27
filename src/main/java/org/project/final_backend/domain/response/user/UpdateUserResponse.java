@@ -13,7 +13,7 @@ public class UpdateUserResponse {
     private UUID id;
 
     private String userName;
-    private String mail;
+    private String email;
     private String phoneNumber;
     private String address;
     private LocalDate dob;

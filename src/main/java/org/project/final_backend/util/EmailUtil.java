@@ -58,7 +58,7 @@ public class EmailUtil {
                 "<p>Dear User,</p>" +
                 "<p>Thank you for using our service. Your One-Time Password (OTP) is:</p>" +
                 "<h2 style='color: blue;'>" + otp + "</h2>" +
-                "<p>Please use this OTP to complete your verification process. This OTP is valid for 2 minutes.</p>" +
+                "<p>Please use this OTP to complete your verification process. This OTP is valid for 10 minutes.</p>" +
                 "<p>If you did not request this code, please ignore this email.</p>" +
                 "<br>" +
                 "<p>Best regards,</p>" +

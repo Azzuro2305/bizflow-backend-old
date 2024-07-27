@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ValidateUserRequest {
-    private String mail;
+    private String email;
     private String password;
 }

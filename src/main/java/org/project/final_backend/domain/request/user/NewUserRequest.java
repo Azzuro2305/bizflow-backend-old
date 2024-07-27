@@ -11,6 +11,6 @@ public class NewUserRequest {
 //    public String getUserName() {
 //        return firstName + " " + lastName;
 //    }
-    private String mail;
+    private String email;
     private String password;
 }

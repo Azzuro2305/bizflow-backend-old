@@ -10,5 +10,7 @@ import java.util.UUID;
 public class UserInfo {
     private UUID id;
     private String userName;
-    private String mail;
+    private String email;
+    private String role;
+    private String subscription;
 }

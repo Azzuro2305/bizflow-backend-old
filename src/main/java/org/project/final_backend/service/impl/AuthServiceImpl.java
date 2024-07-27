@@ -43,14 +43,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean isOTPValid(ResetPasswordOTPRequest request) {
-        final OTP otp = OTPCache.getOTP(request.getMail());
+        final OTP otp = OTPCache.getOTP(request.getEmail());
 
         return otp != null && otp.getOtp().equals(request.getOtp()) && LocalDateTime.now().isBefore(otp.getExpiredTIme());
     }
 
     @Override
     public boolean registerUser(NewUserRequest request) {
-        if (userRepo.findUsersByMail(request.getMail()).isPresent()) {
+        if (userRepo.findUsersByEmail(request.getEmail()).isPresent()) {
             throw new UserFoundException("User already exists!");
         } else if (request.getPassword().length() < 8) {
             throw new Error400Exception("Password length must be 8!");
@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
 //                    .firstName(request.getFirstName())
 //                    .lastName(request.getLastName())
                     .userName(request.getUserName())
-                    .mail(request.getMail())
+                    .email(request.getEmail())
                     .bannerImg("https://images.pexels.com/photos/573130/pexels-photo-573130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")
                     .profileImg("https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg")
                     .password(bCryptPasswordEncoder.encode(request.getPassword()))
@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean verifyMail(VerifyMailRequest request) {
-        userRepo.findUsersByMail(request.getMail()).orElseThrow(
+        userRepo.findUsersByEmail(request.getEmail()).orElseThrow(
                 () -> new UserNotFoundException("User not found!")
         );
        return true;
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean verifyOTPCode(ResetPasswordOTPRequest request) {
-        userRepo.findUsersByMail(request.getMail())
+        userRepo.findUsersByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
         validateOTPOrThrow(request);
         return true;
@@ -90,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean resetPassword(ResetPasswordRequest request) {
-        final Users user = userRepo.findUsersByMail(request.getMail()).orElseThrow(
+        final Users user = userRepo.findUsersByEmail(request.getEmail()).orElseThrow(
                 () -> new UserNotFoundException("User not found!")
         );
         
@@ -108,10 +108,10 @@ public class AuthServiceImpl implements AuthService {
     public boolean resetPasswordWithOTP(ResetPasswordOTPRequest request) {
         validateOTPOrThrow(request);
 
-        Users user = userRepo.findUsersByMail(request.getMail()).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        Users user = userRepo.findUsersByEmail(request.getEmail()).orElseThrow(() -> new UserNotFoundException("User not found!"));
 
         if(user != null){
-            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
             user.setUpdatedDate(new Date());
             userRepo.save(user);
 
@@ -122,15 +122,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void generateOTP(NewOTPRequest request) {
-        if(userRepo.findUsersByMail(request.getMail()).isPresent()) {
+        if(userRepo.findUsersByEmail(request.getEmail()).isPresent()) {
             Random random = new Random();
             final int min = 100000;
             final int max = 1000000;
             final int r = random.nextInt(min, max);
 
-            send(request.getMail(), emailUtil.generateOtpResetPasswordEmailBody(String.valueOf(r)));
+            send(request.getEmail(), emailUtil.generateOtpResetPasswordEmailBody(String.valueOf(r)));
 
-            OTP otp = new OTP(request.getMail(), Integer.toString(r), LocalDateTime.now().plusMinutes(2));
+            OTP otp = new OTP(request.getEmail(), Integer.toString(r), LocalDateTime.now().plusMinutes(10));
             OTPCache.saveOTP(otp);
         } else {
             throw  new RuntimeException("User not found.");
@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserInfo validateUser(ValidateUserRequest request) {
         final Users user = userRepo
-                .findUsersByMail(request.getMail())
+                .findUsersByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User have not registered yet!"));
         if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Invalid password!");

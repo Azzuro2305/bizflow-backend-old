@@ -8,5 +8,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class VerifyMailRequest {
-    private String mail;
+    private String email;
 }

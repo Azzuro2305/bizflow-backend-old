@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NewOTPRequest {
-    private String mail;
+    private String email;
     private String otp;
 }

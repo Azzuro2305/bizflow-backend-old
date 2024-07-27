@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
         user.setUserName(request.getUserName() != null ? request.getUserName() : user.getUserName());
         user.setUserName(request.getUserName() != null ? request.getUserName() : user.getUserName());
-        user.setMail(request.getMail() != null ? request.getMail() : user.getMail());
+        user.setEmail(request.getEmail() != null ? request.getEmail() : user.getEmail());
         user.setPhoneNumber(request.getPhoneNumber() != null ? request.getPhoneNumber() : user.getPhoneNumber());
         user.setAddress(request.getAddress() != null ? request.getAddress() : user.getAddress());
         user.setBannerImg(request.getBannerImg() != null ? request.getBannerImg() : user.getBannerImg());

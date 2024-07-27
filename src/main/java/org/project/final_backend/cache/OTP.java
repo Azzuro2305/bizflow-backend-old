@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class OTP {
-    private String mail;
+    private String email;
     private String otp;
     private LocalDateTime expiredTIme;
 }

@@ -55,7 +55,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/reset-password-otp")
+    @PostMapping("/verify-otp")
     public ResponseEntity<HttpResponse<Boolean>> verifyOTPCode(@RequestBody ResetPasswordOTPRequest request){
         HttpResponse<Boolean> response =
                 new HttpResponse<>(authService.verifyOTPCode(request), "OTP verified", HttpStatus.OK);

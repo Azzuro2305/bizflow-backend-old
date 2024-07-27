@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 public class UpdateUserRequest {
     private String userName;
-    private String mail;
+    private String email;
     private String phoneNumber;
     private String address;
     private String bannerImg;
